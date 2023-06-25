@@ -1,13 +1,25 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { HubConnectionBuilder } from '@microsoft/signalr';
 import { authdata, getUserId } from '../Util';
+import { Button, Card, Col, Descriptions, List, Row } from 'antd';
 
 
 const Home = () => {
-  const [histories, setHistory] = useState([]);
+  const [history, setHistory] = useState([]);
+  const [selectedWebhook, setSelectedWebhook] = useState(null);
+  const [previewWebhook, setPreviewWebhook] = useState(null);
+
+  const handleItemClick = (webhook) => {
+    setSelectedWebhook(webhook);
+  };
+
+  const onItemPreview = (webhook) => {
+    if (!selectedWebhook) handleItemClick(webhook);
+    setPreviewWebhook(webhook);
+  };
 
   useEffect(() => {
-    var url = `https://localhost:7143/chatHub`
+    const url = `https://localhost:7143/chatHub`
 
     const connection = new HubConnectionBuilder()
       .withUrl(url, {
@@ -22,27 +34,11 @@ const Home = () => {
 
     connection.start()
       .then(result => {
-        var userId = getUserId();
+        const userId = getUserId();
         console.log('Connected!: ' + userId);
         if (userId) {
           connection.on(userId, message => {
-            console.log("onlyme", message);
-            try {
-              message.requestInfos = message.requestInfos?.reduce((result, item) => {
-                const key = item.resource;
-                if (!result[key]) {
-                  result[key] = [];
-                }
-                result[key].push(item);
-                return result;
-              }, {});
-
-              const list = [...histories.current];
-              list.unshift(message);
-
-              setHistory(list);
-            } catch (error) {
-            }
+            proccessMessage(message);
           });
         }
 
@@ -53,24 +49,129 @@ const Home = () => {
       .catch(e => console.log('Connection failed: ', e));
   }, []);
 
+  const proccessMessage = (message) => {
+    console.log("onlyme", message);
+    try {
+      message.requestInfos = message.requestInfos?.reduce((result, item) => {
+        const key = item.resource;
+        if (!result[key]) {
+          result[key] = [];
+        }
+        result[key].push(item);
+        return result;
+      }, {});
+
+      setHistory((prevMessages) => [message, ...prevMessages]);
+
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
   return (
     <div>
-      <h1>Hello, world!</h1>
-      <p>Welcome to your new single-page application, built with:</p>
-      <ul>
-        <li><a href='https://get.asp.net/'>ASP.NET Core</a> and <a href='https://msdn.microsoft.com/en-us/library/67ef8sbd.aspx'>C#</a> for cross-platform server-side code</li>
-        <li><a href='https://facebook.github.io/react/'>React</a> for client-side code</li>
-        <li><a href='http://getbootstrap.com/'>Bootstrap</a> for layout and styling</li>
-      </ul>
-      <p>To help you get started, we have also set up:</p>
-      <ul>
-        <li><strong>Client-side navigation</strong>. For example, click <em>Counter</em> then <em>Back</em> to return here.</li>
-        <li><strong>Development server integration</strong>. In development mode, the development server from <code>create-react-app</code> runs in the background automatically, so your client-side resources are dynamically built on demand and the page refreshes when you modify any file.</li>
-        <li><strong>Efficient production builds</strong>. In production mode, development-time features are disabled, and your <code>dotnet publish</code> configuration produces minified, efficiently bundled JavaScript files.</li>
-      </ul>
-      <p>The <code>ClientApp</code> subdirectory is a standard React application based on the <code>create-react-app</code> template. If you open a command prompt in that directory, you can run <code>npm</code> commands such as <code>npm test</code> or <code>npm install</code>.</p>
-    </div>
+      <h2>Webhook List</h2>
+      <Row>
+        <Col md={8} style={{
+          height: 'calc(100vh - 142px)',
+          overflowY: 'auto',
+          overflowX: 'hidden'
+        }}>
+          <WebhookList webhooks={history} onItemClick={handleItemClick} onItemPreview={onItemPreview} />
+        </Col>
+        {(selectedWebhook || previewWebhook) && (<Col md={16}
+          style={{
+            border: '1px dashed gray',
+            wordWrap: 'break-word',
+            padding: 5,
+            borderRadius: 10,
+            height: 'fit-content'
+          }}>
+
+          <div>
+            <h2>Webhook Details</h2>
+            {/* <WebhookDetailsV2 webhook={previewWebhook ?? selectedWebhook} /> */}
+            <WebhookDetails webhook={previewWebhook ?? selectedWebhook} />
+          </div>
+        </Col>
+        )}
+      </Row>
+    </div >
   );
 }
 
+const WebhookList = ({ webhooks, onItemClick, onItemPreview }) => (
+  <List
+    dataSource={webhooks}
+    renderItem={(item) => (
+      <List.Item key={item.id} style={{ padding: '5px 0' }}>
+        <Card title={item.webhookPath}
+          style={{ border: '1px dashed gray', wordWrap: 'break-word' }}
+
+          headStyle={{ padding: '0 10px', height: 'auto' }}
+          hoverable={true}
+          bodyStyle={{ padding: '0 10px' }}
+          onClick={() => onItemClick(item)}
+          onMouseEnter={() => onItemPreview(item)}
+          onMouseLeave={() => onItemPreview(null)}
+        >
+          <p>Received At: {new Date(item.createAtUtc).toLocaleString()}</p>
+          {/* <Button type="link" onClick={() => onItemClick(item)}>View Details</Button> */}
+        </Card>
+      </List.Item>
+    )}
+  />
+);
+const WebhookDetails = ({ webhook }) => (
+  <Card title={'{baseurl}/' + webhook.webhookPath + ' - ' + new Date(webhook.createAtUtc).toLocaleString()}>
+    {Object.keys(webhook.requestInfos).map((key) => (
+      <div key={key}>
+        <h5 style={{ color: '#000064' }}>{key}</h5>
+        <Row style={{ paddingBottom: 15 }}>
+          {webhook.requestInfos[key].map((info) => (
+            <Col md={12} key={info.key}>
+              <strong style={{ color: '#000000b3' }}>{info.key}:</strong> {info.value}
+            </Col>
+          ))}
+        </Row>
+      </div>
+    ))}
+  </Card>
+);
+
+const WebhookDetailsV2 = ({ selectedWebhook }) => (selectedWebhook && (
+  <div className="details-container">
+    <h2>Request Details</h2>
+    <Card>
+      <Descriptions title="Primary" bordered column={1}>
+        {selectedWebhook.requestInfos.Primary.map((info, index) => (
+          <Descriptions.Item key={index} label={info.key}>
+            {info.value}
+          </Descriptions.Item>
+        ))}
+      </Descriptions>
+      <Descriptions title="Header" bordered column={1}>
+        {selectedWebhook.requestInfos.Header.map((info, index) => (
+          <Descriptions.Item key={index} label={info.key}>
+            {info.value}
+          </Descriptions.Item>
+        ))}
+      </Descriptions>
+      <Descriptions title="Body" bordered column={1}>
+        {selectedWebhook.requestInfos.Body.map((info, index) => (
+          <Descriptions.Item key={index} label={info.key}>
+            {info.value}
+          </Descriptions.Item>
+        ))}
+      </Descriptions>
+      <Descriptions title="Route Data" bordered column={1}>
+        {selectedWebhook.requestInfos.RouteData.map((info, index) => (
+          <Descriptions.Item key={index} label={info.key}>
+            {info.value}
+          </Descriptions.Item>
+        ))}
+      </Descriptions>
+    </Card>
+  </div>
+));
 export default Home;
