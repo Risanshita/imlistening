@@ -55,6 +55,6 @@ The ImListening project is licensed under the [MIT License](https://opensource.o
 
 ## Contact
 
-If you have any questions or feedback, feel free to contact the project maintainer at your-email@example.com.
+If you have any questions or feedback, feel free to contact the project maintainer at risanshita1996@gmail.com.
 
 Enjoy using ImListening!
