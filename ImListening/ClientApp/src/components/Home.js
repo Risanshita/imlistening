@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { HubConnectionBuilder } from '@microsoft/signalr';
+import { HttpTransportType, HubConnectionBuilder } from '@microsoft/signalr';
 import { authdata, getUserId } from '../Util';
 import { Button, Card, Col, Descriptions, List, Row } from 'antd';
 
@@ -19,16 +19,10 @@ const Home = () => {
   };
 
   useEffect(() => {
-    const url = `https://localhost:7143/chatHub`
+    const url = `${window.location.protocol}//${window.location.hostname}:7143/chatHub`
 
     const connection = new HubConnectionBuilder()
-      .withUrl(url, {
-        accessTokenFactory: () => {
-          // Construct the Basic Authentication header value
-
-          return `Basic ${authdata()}`;
-        },
-      })
+      .withUrl(url)
       .withAutomaticReconnect()
       .build();
 

@@ -1,7 +1,5 @@
 ﻿using Core.ImListening.DbModels;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
-using static StackExchange.Redis.Role;
 
 namespace Common.ImListening.Repositories.InMemoryDb
 {

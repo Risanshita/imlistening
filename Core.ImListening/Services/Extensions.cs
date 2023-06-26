@@ -11,6 +11,8 @@ namespace Core.ImListening.Services
             services.AddRepository();
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<IWebhookService, WebhookService>();
+            services.AddTransient<IListenerService, ListenerService>();
+            services.AddTransient<IHistoryService, HistoryService>();
             return services;
         }
     }

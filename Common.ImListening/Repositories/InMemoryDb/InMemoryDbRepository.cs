@@ -30,6 +30,15 @@ namespace Common.ImListening.Repositories.InMemoryDb
             return _dbSet.Where(predicate).AsAsyncEnumerable();
         }
 
+        public IAsyncEnumerable<T> FindAsync(Expression<Func<T, bool>> predicate, int skip, int take, Expression<Func<T, object>> orderBy, bool ascending = false)
+        {
+            var dbSet = _dbSet.Where(predicate);
+            if (orderBy != null)
+                dbSet = ascending ? dbSet.OrderBy(orderBy) : dbSet.OrderByDescending(orderBy);
+
+            return dbSet.Skip(skip).Take(take).AsAsyncEnumerable();
+        }
+
         public async Task CreateAsync(T entity)
         {
             await _dbSet.AddAsync(entity);
@@ -39,7 +48,7 @@ namespace Common.ImListening.Repositories.InMemoryDb
 
         public async Task AddRangeAsync(IEnumerable<T> entities)
         {
-            await _dbSet.AddRangeAsync(entities); 
+            await _dbSet.AddRangeAsync(entities);
             await _context.SaveChangesAsync();
         }
 
@@ -90,8 +99,17 @@ namespace Common.ImListening.Repositories.InMemoryDb
         private void SetKeyAndExpiry(string key, T value, TimeSpan? expiry = null)
         {
             value.SetPropertyIfExists("Id", key);
-            value.SetPropertyIfExists<T, DateTime?>("ExpireOnUtc", expiry == null ? null: DateTime.UtcNow.Add((TimeSpan)expiry));
+            value.SetPropertyIfExists<T, DateTime?>("ExpireOnUtc", expiry == null ? null : DateTime.UtcNow.Add((TimeSpan)expiry));
         }
 
+        public IAsyncEnumerable<T> FindAsync(Expression<Func<T, bool>> predicate, Expression<Func<T, object>> include, int skip, int take, Expression<Func<T, object>> orderBy, bool ascending = false)
+        {
+            var dbSet = _dbSet.Include(include); 
+            var q = dbSet.Where(predicate);
+            if (orderBy != null)
+                q = ascending ? q.OrderBy(orderBy) : q.OrderByDescending(orderBy);
+
+            return q.Skip(skip).Take(take).AsAsyncEnumerable();
+        }
     }
 }

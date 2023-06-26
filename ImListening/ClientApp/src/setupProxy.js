@@ -22,11 +22,23 @@ module.exports = function (app) {
     onError: onError,
     secure: false,
     // Uncomment this line to add support for proxying websockets
-    //ws: true, 
+    ws: true,
     headers: {
       Connection: 'Keep-Alive'
     }
   });
+
+  // const wsTarget = `ws${target.replace('http', '').replace('https', '')}`;
+  // const appProxyws = createProxyMiddleware(context, {
+  //   target: wsTarget,
+  //   onError,
+  //   ws: true,
+  //   changeOrigin: true,
+  //   headers: {
+  //     Connection: 'Keep-Alive'
+  //   }
+  // });
+  // app.use(appProxyws);
 
   app.use(appProxy);
 };

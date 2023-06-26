@@ -7,6 +7,9 @@ using Microsoft.EntityFrameworkCore;
 using NSwag.Generation.Processors.Security;
 using NSwag;
 using ImListening.Hubs;
+using Core.ImListening.DbModels;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Data.SqlClient;
 
 namespace ImListening
 {
@@ -57,7 +60,18 @@ namespace ImListening
 
             builder.Services.AddDbContext<InMemoryDbContext>(options =>
             {
-                options.UseInMemoryDatabase("ImListeningDb");
+                SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder();
+                builder.DataSource = "SBSMS-RISHI-LT2";
+                builder.InitialCatalog = "ImListening";
+                //builder.UserID = "your_username";
+                //builder.Password = "your_password";
+                builder.TrustServerCertificate = true; // Add this line to disable SSL validation
+                builder.MultipleActiveResultSets = true;
+
+                string connectionString = builder.ConnectionString;
+                connectionString = "Server=SBSMS-RISHI-LT2;Database=ImListening;Trusted_Connection=True;MultipleActiveResultSets=true;TrustServerCertificate=True";
+                options.UseSqlServer(connectionString);
+                //options.UseInMemoryDatabase("ImListeningDb");
             });
             var provider = builder.Services.BuildServiceProvider();
 
@@ -116,7 +130,55 @@ namespace ImListening
             //    await userService.CreateUserAsync(new Core.ImListening.ApiModels.UserRequest { Description = "This is a admin account to manage the app.", Password = "Rishi@112", Username = "RISHI" }, "Admin");
             //});
             app.MapHub<ChatHub>("/chatHub");
+
+            CreateDbIfNotExists(app);
             app.Run();
+        }
+        private static void CreateDbIfNotExists(IHost host)
+        {
+            using (var scope = host.Services.CreateScope())
+            {
+                var services = scope.ServiceProvider;
+                try
+                {
+                    var context = services.GetRequiredService<InMemoryDbContext>();
+                    Initialize(context);
+                }
+                catch (Exception ex)
+                {
+                    var logger = services.GetRequiredService<ILogger<InMemoryDbContext>>();
+                    logger.LogError(ex, "An error occurred creating the DB.");
+                }
+            }
+
+        }
+
+        public static void Initialize(InMemoryDbContext context)
+        {
+            context.Database.EnsureCreated();
+
+            // Look for any students.
+            if (context.Users.Any())
+            {
+                return;   // DB has been seeded
+            }
+            var adminUser = new User
+            {
+                Description = "THIS IS ADMIN USER",
+                Id = "RISHI",
+                Password = "KUMAR",
+                Role = "Admin"
+            };
+
+            context.Users.Add(adminUser);
+            context.Webhook.Add(new Webhook
+            {
+                Id = "rishi",
+                StatusCode = 200,
+                UserId = adminUser.Id
+            });
+
+            context.SaveChanges();
         }
     }
 }
