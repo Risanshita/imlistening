@@ -148,7 +148,7 @@ namespace ImListening.Controllers
             return await reader.ReadToEndAsync();
         }
 
-        [HttpPost("oauth/{path}")]
+        [Route("oauth/{path}")]
         [Authorize]
 
         [HttpGet]
@@ -171,7 +171,7 @@ namespace ImListening.Controllers
             return GetResponse(path);
         }
 
-        [HttpPost("basic-auth/{path}")]
+        [Route("basic-auth/{path}")]
         [Authorize(AuthenticationSchemes = "BasicAuth")]
 
         [HttpGet]
