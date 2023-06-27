@@ -6,10 +6,9 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.EntityFrameworkCore;
 using NSwag.Generation.Processors.Security;
 using NSwag;
-using ImListening.Hubs;
 using Core.ImListening.DbModels;
-using Microsoft.Extensions.Hosting;
 using Microsoft.Data.SqlClient;
+using Core.ImListening;
 
 namespace ImListening
 {

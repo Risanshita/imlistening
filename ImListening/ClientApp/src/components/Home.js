@@ -19,8 +19,7 @@ const Home = () => {
   };
 
   useEffect(() => {
-    //const url = `${window.location.protocol}//${window.location.hostname}:7143/chatHub`;
-    const url = `https://localhost:7143/chatHub`;
+    const url = `${window.location.protocol}//${window.location.hostname}:7143/chatHub`;
 
     const connection = new HubConnectionBuilder()
       .withUrl(url)
