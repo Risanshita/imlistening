@@ -2,7 +2,6 @@
 using Core.ImListening.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.VisualBasic;
 
 namespace ImListening.Controllers
 {
@@ -19,9 +18,9 @@ namespace ImListening.Controllers
         }
 
         [HttpGet]
-        public async IAsyncEnumerable<History> GetHistoryAsync([FromQuery] string? userId = null, [FromQuery] string? webhookPath = null, [FromQuery] int take = 20, [FromQuery] int skip = 0)
+        public async IAsyncEnumerable<History> GetHistoryAsync([FromQuery] string? webhookPath = null, [FromQuery] int take = 20, [FromQuery] int skip = 0)
         {
-            var ls = _historyService.GetHistoryAsync(userId, webhookPath, take, skip);
+            var ls = _historyService.GetHistoryAsync(UserId, webhookPath, take, skip);
             await foreach (var item in ls)
             {
                 foreach (var a in item.RequestInfos)

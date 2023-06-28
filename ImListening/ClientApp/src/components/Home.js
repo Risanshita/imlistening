@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { HttpTransportType, HubConnectionBuilder } from '@microsoft/signalr';
-import { authdata, getUserId } from '../Util';
+import { authHeader, authdata, getUserId } from '../Util';
 import { Button, Card, Col, Descriptions, List, Row } from 'antd';
 
 
@@ -18,7 +18,8 @@ const Home = () => {
     setPreviewWebhook(webhook);
   };
 
-  useEffect(() => {
+  useEffect(async () => {
+    fetchData();
     const url = `${window.location.protocol}//${window.location.hostname}:7143/chatHub`;
 
     const connection = new HubConnectionBuilder()
@@ -42,6 +43,38 @@ const Home = () => {
       })
       .catch(e => console.log('Connection failed: ', e));
   }, []);
+
+  const fetchData = async (path) => {
+    try {
+      try {
+        const response = await fetch('history',
+          {
+            headers: authHeader()
+          });
+        if (!response.ok) {
+          throw new Error('Request failed');
+        }
+        const responseData = await response.json();
+
+        for (const element of responseData) {
+          element.requestInfos = element.requestInfos?.reduce((result, item) => {
+            const key = item.resource;
+            if (!result[key]) {
+              result[key] = [];
+            }
+            result[key].push(item);
+            return result;
+          }, {});
+        }
+        
+        setHistory((prevMessages) => [...prevMessages, ...responseData]);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
 
   const proccessMessage = (message) => {
     console.log("onlyme", message);
