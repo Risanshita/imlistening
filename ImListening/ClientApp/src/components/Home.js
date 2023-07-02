@@ -18,7 +18,7 @@ const Home = () => {
     setPreviewWebhook(webhook);
   };
 
-  useEffect(async () => {
+  useEffect(() => {
     fetchData();
     const url = `${window.location.protocol}//${window.location.hostname}:7143/chatHub`;
 
