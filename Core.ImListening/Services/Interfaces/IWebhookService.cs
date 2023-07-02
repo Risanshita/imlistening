@@ -8,7 +8,7 @@ namespace Core.ImListening.Services.Interfaces
         Task CreateWebhookAsync(WebhookRequest request, string userId);
         Task DeleteWebhookAsync(Webhook webhook);
         Task<Webhook?> GetWebhookByIdAsync(string id);
-        IAsyncEnumerable<Webhook> GetWebhooksAsync(string? path = null);
+        IAsyncEnumerable<Webhook> GetWebhooksAsync(string userId, string? path = null);
         Task UpdateWebhookAsync(Webhook webhook, WebhookRequest request);
     }
 }

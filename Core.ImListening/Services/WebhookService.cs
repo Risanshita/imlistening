@@ -38,11 +38,11 @@ namespace Core.ImListening.Services
             return await _repository.GetByIdAsync(id);
         }
 
-        public IAsyncEnumerable<Webhook> GetWebhooksAsync(string? path = null)
+        public IAsyncEnumerable<Webhook> GetWebhooksAsync(string userId, string? path = null)
         {
             return string.IsNullOrWhiteSpace(path)
-                ? _repository.GetAllAsync()
-                : _repository.FindAsync(a => a.Id.Contains(path, StringComparison.CurrentCultureIgnoreCase));
+                ? _repository.FindAsync(a => a.UserId == userId)
+                : _repository.FindAsync(a => a.UserId == userId && a.Id.Contains(path, StringComparison.CurrentCultureIgnoreCase));
         }
 
         public Task UpdateWebhookAsync(Webhook webhook, WebhookRequest request)

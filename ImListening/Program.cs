@@ -74,7 +74,7 @@ namespace ImListening
             });
             var provider = builder.Services.BuildServiceProvider();
 
-            builder.Services.AddSingleton<DbContext>(provider.GetService<InMemoryDbContext>());
+            builder.Services.AddTransient<DbContext>((a) => a.GetService<InMemoryDbContext>());
 
             // Business Services
             builder.Services.AddServices();

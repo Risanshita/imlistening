@@ -157,7 +157,7 @@ const Urls = () => {
                         >
                             <Row style={{ paddingBottom: 5 }}>Status Code:&nbsp;<span style={item.statusCode >= 300 ? ({ color: 'red', fontWeight: 'bold' }) : {}}> {item.statusCode}</span></Row>
                             <Row style={{ paddingBottom: 5 }}>Content Type:&nbsp;{item.contentType}</Row>
-                            <Row style={{ paddingBottom: 5 }}>Timeout:&nbsp;<span style={item.timeout >= 10 ? ({ color: 'red', fontWeight: 'bold' }) : {}}>{item.timeout}</span> </Row>
+                            <Row style={{ paddingBottom: 5 }}>Timeout:&nbsp;<span style={item.timeout >= 10000 ? ({ color: 'red', fontWeight: 'bold' }) : {}}>{item.timeout}</span> </Row>
                             <Row style={{ paddingBottom: 5 }}>Expire on:&nbsp;{new Date(item.expireOnUtc).toLocaleString()}</Row>
                             <Row style={{ paddingBottom: 5 }}><span style={{ fontWeight: 'bold' }}>Response: </span></ Row>
                             <TextArea rows={8} value={item.response} disabled style={{ color: 'black' }} />

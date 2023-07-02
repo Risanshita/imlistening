@@ -18,7 +18,7 @@ namespace Core.ImListening.Services
         {
             if (userId != null && webhookPath != null)
             {
-                return _repository.FindAsync((a) => a.UserId == userId && a.WebhookPath == webhookPath, a => a.RequestInfos, skip, take, a => a.CreateAtUtc, false);
+                return _repository.FindAsync((a) => a.UserId == userId && a.WebhookId == webhookPath, a => a.RequestInfos, skip, take, a => a.CreateAtUtc, false);
             }
             else if (userId != null)
             {
@@ -26,7 +26,7 @@ namespace Core.ImListening.Services
             }
             else if (webhookPath != null)
             {
-                return _repository.FindAsync((a) => a.WebhookPath == webhookPath, a => a.RequestInfos, skip, take, a => a.CreateAtUtc, false);
+                return _repository.FindAsync((a) => a.WebhookId == webhookPath, a => a.RequestInfos, skip, take, a => a.CreateAtUtc, false);
             }
             else
             {

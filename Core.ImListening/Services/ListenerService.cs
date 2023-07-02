@@ -4,6 +4,7 @@ using Core.ImListening.Services.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.Extensions.Logging;
 
 namespace Core.ImListening.Services
 {
@@ -11,39 +12,49 @@ namespace Core.ImListening.Services
     {
         private readonly IRepository<History> _repository;
         private readonly IHubContext<ChatHub> _chatHub;
+        private readonly ILogger<ListenerService> _logger;
 
-        public ListenerService(IHubContext<ChatHub> chatHub, IRepository<History> repository)
+        public ListenerService(IHubContext<ChatHub> chatHub, IRepository<History> repository, ILogger<Services.ListenerService> logger)
         {
             _chatHub = chatHub;
             _repository = repository;
+            _logger = logger;
         }
 
         public async Task ProcessRequest(Webhook webhook, ControllerContext controllerContext)
         {
-            var history = new History()
+            try
             {
-                WebhookPath = controllerContext.HttpContext.Request.Path,
-                UserId = webhook.UserId,
-            };
-            history.RequestInfos = await GetRequestInfo(controllerContext, history);
 
-            var msg = new
-            {
-                history.Id,
-                history.WebhookPath,
-                webhook.UserId,
-                history.CreateAtUtc,
-                RequestInfos = history.RequestInfos.Select(a =>
-                (new
+                var history = new History()
                 {
-                    a.Key,
-                    a.Value,
-                    a.Type,
-                    a.Resource
-                }))
-            };
-            await _chatHub.Clients.All.SendAsync(webhook.UserId ?? "BroadcastReceived", msg);
-            await _repository.CreateAsync(history);
+                    WebhookId = webhook.Id,
+                    UserId = webhook.UserId,
+                };
+                history.RequestInfos = await GetRequestInfo(controllerContext, history);
+
+                var msg = new
+                {
+                    history.Id,
+                    history.WebhookId,
+                    webhook.UserId,
+                    history.CreateAtUtc,
+                    RequestInfos = history.RequestInfos.Select(a =>
+                    (new
+                    {
+                        a.Key,
+                        a.Value,
+                        a.Type,
+                        a.Resource
+                    }))
+                };
+                await _chatHub.Clients.All.SendAsync(webhook.UserId ?? "BroadcastReceived", msg);
+                await _repository.CreateAsync(history);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Exception while proccessing request.",ex);
+            }
         }
 
         private async Task<List<RequestInfo>> GetRequestInfo(ControllerContext controllerContext, History history)

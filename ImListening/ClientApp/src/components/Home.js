@@ -132,7 +132,7 @@ const WebhookList = ({ webhooks, onItemClick, onItemPreview }) => (
     dataSource={webhooks}
     renderItem={(item) => (
       <List.Item key={item.id} style={{ padding: '5px 0' }}>
-        <Card title={item.webhookPath}
+        <Card title={item.webhookId}
           style={{ border: '1px dashed gray', wordWrap: 'break-word' }}
 
           headStyle={{ padding: '0 10px', height: 'auto' }}
@@ -150,7 +150,7 @@ const WebhookList = ({ webhooks, onItemClick, onItemPreview }) => (
   />
 );
 const WebhookDetails = ({ webhook }) => (
-  <Card title={'{baseurl}/' + webhook.webhookPath + ' - ' + new Date(webhook.createAtUtc).toLocaleString()}>
+  <Card title={'{baseurl}/' + webhook.webhookId + ' - ' + new Date(webhook.createAtUtc).toLocaleString()}>
     {Object.keys(webhook.requestInfos).map((key) => (
       <div key={key}>
         <h5 style={{ color: '#000064' }}>{key}</h5>

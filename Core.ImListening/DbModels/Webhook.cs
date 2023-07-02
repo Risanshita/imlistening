@@ -8,6 +8,7 @@
         public int StatusCode { get; set; }
         public string? ContentType { get; set; }
         public string? Response { get; set; }
+        public User User { get; set; }
         public string? UserId { get; set; }
     }
 }
