@@ -1,5 +1,5 @@
-import { Button, Checkbox, Form, Input, message } from 'antd';
-
+import { Button, Checkbox, Form, Input, Row, message,Col } from 'antd';
+import "./LoginStyle.css";
 const Login = (props) => {
     const [messageApi, contextHolder] = message.useMessage();
     const onFinish = (values) => {
@@ -50,7 +50,10 @@ const Login = (props) => {
 
     return (<>
         {contextHolder}
-        <Form
+       <Row justify="center" align="middle" style={{ height: '100vh' }}>
+       <Col>
+         <h2  className="loginHeading">Login</h2>
+       <Form
             name="basic"
             labelCol={{
                 span: 8,
@@ -116,6 +119,8 @@ const Login = (props) => {
                 </Button>
             </Form.Item>
         </Form>
+       </Col>
+        </Row>
     </>
     );
 }

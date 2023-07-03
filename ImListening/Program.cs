@@ -68,7 +68,7 @@ namespace ImListening
                 builder.MultipleActiveResultSets = true;
 
                 string connectionString = builder.ConnectionString;
-                connectionString = "Server=SBSMS-RISHI-LT2;Database=ImListening;Trusted_Connection=True;MultipleActiveResultSets=true;TrustServerCertificate=True";
+                connectionString = "Server=(localdb)\\MSSQLLocalDB;Database=ImListening;Trusted_Connection=True;MultipleActiveResultSets=true;TrustServerCertificate=True";
                 options.UseSqlServer(connectionString);
                 //options.UseInMemoryDatabase("ImListeningDb");
             });
@@ -165,7 +165,7 @@ namespace ImListening
             {
                 Description = "THIS IS ADMIN USER",
                 Id = "RISHI",
-                Password = "KUMAR",
+                Password = "    ",
                 Role = "Admin"
             };
 
