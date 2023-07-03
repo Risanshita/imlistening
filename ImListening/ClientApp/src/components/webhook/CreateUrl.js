@@ -160,16 +160,16 @@ const CreateUrl = ({ isOpen, onClose, editData }) => {
                             name={'contentType'}
                             label="ContentType"
                         >
-                            <Input />
+                            <Input placeholder='Default text/plain' />
                         </Form.Item>
                         <Form.Item
                             name={'timeout'}
-                            label="Timeout"
+                            label="Timeout(ms)"
                             rules={[
                                 {
                                     type: 'number',
                                     min: 0,
-                                    max: 600,
+                                    max: 600000,
                                 },
                             ]} style={{ width: '100%' }}
                         >

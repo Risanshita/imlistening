@@ -10,11 +10,11 @@ namespace Core.ImListening.ApiModels
         public string Path { get; set; } = Guid.NewGuid().ToString();
         [Range(1, 525600)]
         public int ExpireAfterMin { get; set; } = 525600; // 365 days
-        [Range(0, 600, ErrorMessage = "Response timeout should be b/w 0 to 600.")]
+        [Range(0, 600000, ErrorMessage = "Response timeout should be b/w 0 to 600,000.")]
         public int Timeout { get; set; } = 0;
         [Range(100, 599)]
         public int StatusCode { get; set; } = 200;
-        public string? ContentType { get; set; }
+        public string? ContentType { get; set; } = "text/plain";
         public string? Response { get; set; }
     }
 }

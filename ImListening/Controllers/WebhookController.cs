@@ -22,7 +22,7 @@ namespace ImListening.Controllers
         [HttpGet]
         public IAsyncEnumerable<Webhook> GetWebhooksAsync([FromQuery] string? path = null)
         {
-            return _webhookService.GetWebhooksAsync(path);
+            return _webhookService.GetWebhooksAsync(UserId, path);
         }
 
         [HttpGet("{id}")]
@@ -39,8 +39,13 @@ namespace ImListening.Controllers
         [HttpPost]
         public async Task<ActionResult> CreateWebhook([FromBody] WebhookRequest request)
         {
-            await _webhookService.CreateWebhookAsync(request, UserId);
-            return new ObjectResult(null) { StatusCode = (int)HttpStatusCode.Created };
+            var webhook = await _webhookService.GetWebhookByIdAsync(request.Path);
+            if (webhook == null)
+            {
+                await _webhookService.CreateWebhookAsync(request, UserId);
+                return new ObjectResult(null) { StatusCode = (int)HttpStatusCode.Created };
+            }
+            return BadRequest("Url already exist.");
         }
 
         [HttpPut("{id}")]

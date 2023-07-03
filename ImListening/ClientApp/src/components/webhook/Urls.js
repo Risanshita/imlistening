@@ -119,147 +119,65 @@ const Urls = () => {
     setOpen(true);
   };
 
-  const onSearch = (path) => {
-    fetchData(path);
-  };
-  return (
-    <div>
-      {contextHolder}
-      <Row justify={"space-between"} style={{ paddingBottom: 10 }}>
-        <Col>
-          <Row>
-            <Title level={4}>Manage Url</Title>
-            <Search
-              placeholder="Url path"
-              allowClear
-              onSearch={onSearch}
-              style={{ paddingLeft: 10, width: 300 }}
-              maxLength={50}
+    const onSearch = (path) => {
+        fetchData(path)
+    };
+    return (
+        <div>
+            {contextHolder}
+            <Row justify={'space-between'} style={{ paddingBottom: 10 }}>
+                <Col>
+                    <Row>
+                        <Title level={4}>Manage Url</Title>
+                        <Search
+                            placeholder="Url path"
+                            allowClear
+                            onSearch={onSearch}
+                            style={{ paddingLeft: 10, width: 300 }}
+                            maxLength={50}
+                        />
+                    </Row>
+                </Col>
+                <Button type='primary' onClick={showModal}>New Url</Button>
+            </Row>
+            <List
+                grid={{
+                    gutter: 16,
+                    xs: 1,
+                    sm: 2,
+                    md: 2,
+                    lg: 3,
+                    xl: 4,
+                    // xxl: 3,
+                }}
+                dataSource={data}
+                renderItem={(item) => (
+                    <List.Item>
+                        <Card title={<>{item.id}</>}
+                            style={{ border: '1px dashed gray', width: 330, height: 430, wordWrap: 'break-word' }}
+                            actions={[
+                                <Popconfirm key={"user_table_action" + item.id} title="Sure to delete?" onConfirm={() => handleDelete(item)}>
+                                    <Button type="text" shape="circle" icon={<DeleteOutlined key="delete" />} size={20} danger />
+                                </Popconfirm>,
+                                <Button key={"user_table_action_B1" + item.id} onClick={() => handleEdit(item)} type="text" shape="circle" icon={<EditOutlined key="edit" style={{ color: 'blue' }} />} size={20} />,
+                                <Button key={"user_table_action_B1" + item.id} onClick={() => handleCopy(item)} type="text" shape="circle" icon={<CopyOutlined key="copy" />} size={20} />,
+                            ]}
+                            headStyle={{ padding: 5, minHeight: 30 }}
+                            hoverable={true}
+                            bodyStyle={{ padding: 10, height: 330 }}
+                        >
+                            <Row style={{ paddingBottom: 5 }}>Status Code:&nbsp;<span style={item.statusCode >= 300 ? ({ color: 'red', fontWeight: 'bold' }) : {}}> {item.statusCode}</span></Row>
+                            <Row style={{ paddingBottom: 5 }}>Content Type:&nbsp;{item.contentType}</Row>
+                            <Row style={{ paddingBottom: 5 }}>Timeout:&nbsp;<span style={item.timeout >= 10 ? ({ color: 'red', fontWeight: 'bold' }) : {}}>{item.timeout}</span> </Row>
+                            <Row style={{ paddingBottom: 5 }}>Expire on:&nbsp;{new Date(item.expireOnUtc).toLocaleString()}</Row>
+                            <Row style={{ paddingBottom: 5 }}><span style={{ fontWeight: 'bold' }}>Response: </span></ Row>
+                            <TextArea rows={8} value={item.response} disabled style={{ color: 'black' }} />
+                        </Card>
+                    </List.Item>
+                )}
             />
-          </Row>
-        </Col>
-        <Button type="primary" onClick={showModal}>
-          New Url
-        </Button>
-      </Row>
-      <Row className="RowBox">
-        {
-          <List
-            className="liy"
-            // grid={{
-            //   gutter: 86,
-            //   xs: 1,
-            //   sm: 2,
-            //   md: 2,
-            //   lg: 3,
-            //   xl: 4,
-            // }}
-            dataSource={data}
-            renderItem={(item) => (
-              <List.Item>
-                <Card
-                  title={<>{item.id}</>}
-                  style={{
-                    border: "1px dashed gray",
-                    width: 330,
-                    height: 430,
-                    // wordWrap: "break-word",
-                  }}
-                  actions={[
-                    <Popconfirm
-                      key={"user_table_action" + item.id}
-                      title="Sure to delete?"
-                      onConfirm={() => handleDelete(item)}
-                    >
-                      <Button
-                        type="text"
-                        shape="circle"
-                        icon={<DeleteOutlined key="delete" />}
-                        size={20}
-                        danger
-                      />
-                    </Popconfirm>,
-                    <Button
-                      key={"user_table_action_B1" + item.id}
-                      onClick={() => handleEdit(item)}
-                      type="text"
-                      shape="circle"
-                      icon={
-                        <EditOutlined key="edit" style={{ color: "blue" }} />
-                      }
-                      size={20}
-                    />,
-                    <Button
-                      key={"user_table_action_B1" + item.id}
-                      onClick={() => handleCopy(item)}
-                      type="text"
-                      shape="circle"
-                      icon={<CopyOutlined key="copy" />}
-                      size={20}
-                    />,
-                  ]}
-                  headStyle={{ padding: 5, minHeight: 30 }}
-                  hoverable={true}
-                  bodyStyle={{ padding: 10, height: 330 }}
-                >
-                  <Row style={{ paddingBottom: 5 }}>
-                    Status Code:&nbsp;
-                    <span
-                      style={
-                        item.statusCode >= 300
-                          ? { color: "red", fontWeight: "bold" }
-                          : {}
-                      }
-                    >
-                      {" "}
-                      {item.statusCode}
-                    </span>
-                  </Row>
-                  <Row style={{ paddingBottom: 5 }}>
-                    Content Type:&nbsp;{item.contentType}
-                  </Row>
-                  <Row style={{ paddingBottom: 5 }}>
-                    Timeout:&nbsp;
-                    <span
-                      style={
-                        item.timeout >= 10
-                          ? { color: "red", fontWeight: "bold" }
-                          : {}
-                      }
-                    >
-                      {item.timeout}
-                    </span>{" "}
-                  </Row>
-                  <Row style={{ paddingBottom: 5 }}>
-                    Expire on:&nbsp;
-                    {new Date(item.expireOnUtc).toLocaleString()}
-                  </Row>
-                  <Row style={{ paddingBottom: 5 }}>
-                    <span style={{ fontWeight: "bold" }}>Response: </span>
-                  </Row>
-                  <TextArea
-                    rows={8}
-                    value={item.response}
-                    disabled
-                    style={{ color: "black" }}
-                  />
-                </Card>
-              </List.Item>
-            )}
-          />
-        }
-      </Row>
-      {
-        <CreateUrl
-          isOpen={open}
-          onClose={() => {
-            setOpen(false);
-            fetchData();
-          }}
-          editData={selectedRecord}
-        />
-      }
-    </div>
-  );
+            {<CreateUrl isOpen={open} onClose={() => { setOpen(false); fetchData() }} editData={selectedRecord} />}
+        </div>
+    );
 };
 export default Urls;

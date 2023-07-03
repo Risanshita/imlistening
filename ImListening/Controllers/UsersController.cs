@@ -39,8 +39,13 @@ namespace ImListening.Controllers
         [HttpPost]
         public async Task<ActionResult> CreateUser([FromBody] UserRequest request)
         {
-            await _userService.CreateUserAsync(request);
-            return new ObjectResult(null) { StatusCode = (int)HttpStatusCode.Created };
+            var user = await _userService.GetUserByIdAsync(request.Username);
+            if (user == null)
+            {
+                await _userService.CreateUserAsync(request);
+                return new ObjectResult(null) { StatusCode = (int)HttpStatusCode.Created };
+            }
+            return BadRequest("Username already exist.");
         }
 
         [HttpPost("authenticate")]

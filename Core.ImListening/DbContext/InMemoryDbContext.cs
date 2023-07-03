@@ -10,6 +10,7 @@ namespace Common.ImListening.Repositories.InMemoryDb
         {
             optionsBuilder.EnableSensitiveDataLogging();
             optionsBuilder.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+            base.OnConfiguring(optionsBuilder);
             // Other configuration options...
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)

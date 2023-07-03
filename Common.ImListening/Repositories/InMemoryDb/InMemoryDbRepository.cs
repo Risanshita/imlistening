@@ -54,7 +54,7 @@ namespace Common.ImListening.Repositories.InMemoryDb
 
         public Task UpdateAsync(T entity)
         {
-            _dbSet.Attach(entity);
+            _dbSet.Update(entity);
             _context.Entry(entity).State = EntityState.Modified;
             return _context.SaveChangesAsync();
         }

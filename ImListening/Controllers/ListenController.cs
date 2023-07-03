@@ -1,4 +1,5 @@
-﻿using Core.ImListening.Services.Interfaces;
+﻿using Core.ImListening.DbModels;
+using Core.ImListening.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -47,12 +48,32 @@ namespace ImListening.Controllers
             {
                 return NotFound();
             }
-            _ = _listenerService.ProcessRequest(webhook, ControllerContext);
-            return Ok();
+            await _listenerService.ProcessRequest(webhook, ControllerContext);
+            return await GenerateResponse(webhook);
 
         }
 
+        private async Task<IActionResult> GenerateResponse(Webhook webhook)
+        {
+            var response = new ContentResult
+            {
+                StatusCode = webhook.StatusCode
+            };
 
+            if (!string.IsNullOrEmpty(webhook.ContentType))
+            {
+                response.ContentType = webhook.ContentType;
+            }
+            if (webhook.Response != null)
+            {
+                response.Content = webhook.Response;
+            }
+            if (webhook.Timeout != 0)
+            {
+                await Task.Delay(webhook.Timeout);
+            }
+            return response;
+        }
 
         [Route("oauth/{path}")]
         [Authorize]
