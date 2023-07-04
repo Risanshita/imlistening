@@ -1,15 +1,12 @@
-.liy{
-    /* background-color: red; */
-    padding: 10px;
-    width: 100%;
-}
-.liy:hover{
-    background-color: #e6e6e6;
-    cursor: pointer;
+
+
+.urlHeading{
+    
+        text-align: center;
+        font-size: 30px;
+        font-weight: bold;
+        color: var(--textColor);    
+        margin-bottom: 30px;
+    
 }
 
-.RowBox{
-    width: 80vw;
-    background-color: blue;
-
-}
