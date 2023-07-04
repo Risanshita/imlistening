@@ -1,0 +1,7 @@
+.loginHeading{
+    text-align: center;
+    font-size: 30px;
+    font-weight: bold;
+    color: var(--textColor);    
+    margin-bottom: 30px;
+}

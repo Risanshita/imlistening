@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { HttpTransportType, HubConnectionBuilder } from '@microsoft/signalr';
 import { authHeader, authdata, getUserId } from '../Util';
 import { Button, Card, Col, Descriptions, List, Row } from 'antd';
+import "./Home_style.css";
 
 
 const Home = () => {
@@ -97,14 +98,16 @@ const Home = () => {
 
   return (
     <div>
-      <h2>Webhook List</h2>
-      <Row>
-        <Col md={8} style={{
+      <h2 className="Heading">Webhook List</h2>
+      <Row justify={"space-between"} gutter={40}  >
+        <Col xs={24} sm={24} md={8}    className='WebListBox' style={{
           height: 'calc(100vh - 142px)',
           overflowY: 'auto',
-          overflowX: 'hidden'
+          overflowX: 'hidden',
+          padding: 10,
+
         }}>
-          <WebhookList webhooks={history} onItemClick={handleItemClick} onItemPreview={onItemPreview} />
+          <WebhookList className="WebListBox" webhooks={history} onItemClick={handleItemClick} onItemPreview={onItemPreview} />
         </Col>
         {(selectedWebhook || previewWebhook) && (<Col md={16}
           style={{
@@ -116,7 +119,7 @@ const Home = () => {
           }}>
 
           <div>
-            <h2>Webhook Details</h2>
+            <h2 className='webdetails'>Webhook Details</h2>
             {/* <WebhookDetailsV2 webhook={previewWebhook ?? selectedWebhook} /> */}
             <WebhookDetails webhook={previewWebhook ?? selectedWebhook} />
           </div>
@@ -128,11 +131,11 @@ const Home = () => {
 }
 
 const WebhookList = ({ webhooks, onItemClick, onItemPreview }) => (
-  <List
+  <List 
     dataSource={webhooks}
     renderItem={(item) => (
       <List.Item key={item.id} style={{ padding: '5px 0' }}>
-        <Card title={item.webhookId}
+        <Card className='historyGrid' title={item.webhookPath}
           style={{ border: '1px dashed gray', wordWrap: 'break-word' }}
 
           headStyle={{ padding: '0 10px', height: 'auto' }}
@@ -150,7 +153,7 @@ const WebhookList = ({ webhooks, onItemClick, onItemPreview }) => (
   />
 );
 const WebhookDetails = ({ webhook }) => (
-  <Card title={'{baseurl}/' + webhook.webhookId + ' - ' + new Date(webhook.createAtUtc).toLocaleString()}>
+  <Card title={'{baseurl}/' + webhook.webhookPath + ' - ' + new Date(webhook.createAtUtc).toLocaleString()}>
     {Object.keys(webhook.requestInfos).map((key) => (
       <div key={key}>
         <h5 style={{ color: '#000064' }}>{key}</h5>

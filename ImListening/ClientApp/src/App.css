@@ -1,0 +1,18 @@
+:root {
+    --bgColor : #F3F3F3;
+    --textColor : #424242;
+    --whiteColor : #FFFFFF;
+    --divColor: #FFFFFF;
+    --blueColor : #1A79FA;
+    --lableColor : #797979;
+
+}
+
+.darkTheme {
+    --bgColor : #424242;
+    --textColor : #FFFFFF;
+    --whiteColor : #FFFFFF;
+    --divColor: #555555;
+    --blueColor : #1A79FA;
+    --lableColor : #797979;
+}
