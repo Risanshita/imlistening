@@ -16,7 +16,9 @@ namespace Core.ImListening.Services
 
         public async Task<User?> Authenticate(string username, string password)
         {
-            return await (_repository.FindAsync(a => a.Id == username && a.Password == password).FirstOrDefaultAsync());
+            return await _repository.FindAsync(a => a.Id.Equals(username) && a.Password.Equals(password))
+                .Select(a => new User { Id = a.Id })
+                .FirstOrDefaultAsync();
         }
 
         public Task CreateUserAsync(UserRequest request, string role = "User")
