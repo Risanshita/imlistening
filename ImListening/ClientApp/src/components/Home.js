@@ -146,6 +146,7 @@ const WebhookList = ({ webhooks, onItemClick, onItemPreview }) => (
           onMouseLeave={() => onItemPreview(null)}
         >
           <p>Received At: {new Date(item.createAtUtc).toLocaleString()}</p>
+          <p>URL: {'{baseurl}/'+ item.webhookId}</p>
           {/* <Button type="link" onClick={() => onItemClick(item)}>View Details</Button> */}
         </Card>
       </List.Item>
@@ -153,7 +154,7 @@ const WebhookList = ({ webhooks, onItemClick, onItemPreview }) => (
   />
 );
 const WebhookDetails = ({ webhook }) => (
-  <Card title={'{baseurl}/' + webhook.webhookPath + ' - ' + new Date(webhook.createAtUtc).toLocaleString()}>
+  <Card title={'{baseurl}/' + webhook.webhookId + ' - ' + new Date(webhook.createAtUtc).toLocaleString()}>
     {Object.keys(webhook.requestInfos).map((key) => (
       <div key={key}>
         <h5 style={{ color: '#000064' }}>{key}</h5>

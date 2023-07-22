@@ -187,6 +187,12 @@ const CreateUrl = ({ isOpen, onClose, editData }) => {
                             ]} style={{ width: '100%' }}
                         >
                             <InputNumber style={{ width: '100%' }} placeholder='Default 525600' />
+                        </Form.Item>                        
+                        <Form.Item
+                            name={'forwardTo'}
+                            label="ForwardTo"
+                        >
+                            <Input placeholder='Url' />
                         </Form.Item>
                         <Form.Item name={'response'} label="Response">
                             <Input.TextArea rows={5} />

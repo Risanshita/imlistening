@@ -1,4 +1,6 @@
-﻿namespace Core.ImListening.DbModels
+﻿using Newtonsoft.Json;
+
+namespace Core.ImListening.DbModels
 {
     public class RequestInfo
     {
@@ -7,7 +9,7 @@
         public string Value { get; set; }
         public string Type { get; set; }
         public string Resource { get; set; }
-
+        [JsonIgnore]
         public History History { get; set; }
         public string HistoryId { get; set; }
         public RequestInfo() { }

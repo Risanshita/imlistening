@@ -25,6 +25,7 @@ namespace Core.ImListening.Services
                 StatusCode = request.StatusCode,
                 Timeout = request.Timeout,
                 UserId = userId,
+                ForwardTo = request.ForwardTo,
             });
         }
 
@@ -52,6 +53,7 @@ namespace Core.ImListening.Services
             webhook.Response = request.Response;
             webhook.StatusCode = request.StatusCode;
             webhook.Timeout = request.Timeout;
+            webhook.ForwardTo = request.ForwardTo;
 
             return _repository.UpdateAsync(webhook);
         }

@@ -14,6 +14,7 @@ namespace Core.ImListening.ApiModels
         public int Timeout { get; set; } = 0;
         [Range(100, 599)]
         public int StatusCode { get; set; } = 200;
+        public string? ForwardTo { get; set; }
         public string? ContentType { get; set; } = "text/plain";
         public string? Response { get; set; }
     }
