@@ -1,14 +1,13 @@
 
 using Common.ImListening.Repositories.InMemoryDb;
+using Core.ImListening;
+using Core.ImListening.DbModels;
 using Core.ImListening.Services;
 using ImListening.Handlers;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.EntityFrameworkCore;
-using NSwag.Generation.Processors.Security;
 using NSwag;
-using Core.ImListening.DbModels;
-using Microsoft.Data.SqlClient;
-using Core.ImListening;
+using NSwag.Generation.Processors.Security;
 
 namespace ImListening
 {
@@ -43,7 +42,7 @@ namespace ImListening
             });
 
             // in memory cache
-            //builder.Services.AddMemoryCache();
+            // builder.Services.AddMemoryCache();
 
             // In memory db provider
             builder.Services.AddCors(options =>
@@ -59,22 +58,23 @@ namespace ImListening
 
             builder.Services.AddDbContext<InMemoryDbContext>(options =>
             {
-                SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder();
-                builder.DataSource = "SBSMS-RISHI-LT2";
-                builder.InitialCatalog = "ImListening";
-                //builder.UserID = "your_username";
-                //builder.Password = "your_password";
-                builder.TrustServerCertificate = true; // Add this line to disable SSL validation
-                builder.MultipleActiveResultSets = true;
+                var dbType = builder.Configuration.GetValue<string>("DbType");
+                if (dbType == "SqlServer")
+                {
 
-                string connectionString = builder.ConnectionString;
-                connectionString = "Server=SBSMS-RISHI-LT2;Database=ImListening;Trusted_Connection=True;MultipleActiveResultSets=true;TrustServerCertificate=True";
-                options.UseSqlServer(connectionString);
-                //options.UseInMemoryDatabase("ImListeningDb");
+                    var connectionString = builder.Configuration.GetConnectionString("SqlServer");
+                    options.UseSqlServer(connectionString);
+                }
+                else if (dbType == "InMemory")
+                {
+                    options.UseInMemoryDatabase("ImListeningDb");
+                }
+                else
+                {
+                    throw new InvalidOperationException("Invalid db type value. supported value is InMemory and SqlServer");
+                }
             });
-            var provider = builder.Services.BuildServiceProvider();
-
-            builder.Services.AddTransient<DbContext>((a) => a.GetService<InMemoryDbContext>());
+            _ = builder.Services.AddTransient<DbContext>((a) => a.GetService<InMemoryDbContext>());
 
             // Business Services
             builder.Services.AddServices();

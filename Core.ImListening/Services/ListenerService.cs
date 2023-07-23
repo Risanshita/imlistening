@@ -78,7 +78,7 @@ namespace Core.ImListening.Services
                     using HttpClient httpClient = new() { Timeout = TimeSpan.FromSeconds(5) };
                     // Prepare the request content with JSON data
                     StringContent content = new(jsonData, Encoding.UTF8, "application/json");
-                    
+
                     // Send the POST request and get the response
                     HttpResponseMessage response = await httpClient.PostAsync(webhook.ForwardTo, content);
 
@@ -116,7 +116,7 @@ namespace Core.ImListening.Services
             requestInfo.Add(new RequestInfo(history.Id, history, "Aliases", clientInfo.aliases, "IpAddress"));
             for (int i = 1; i <= clientInfo.ips.Count; i++)
             {
-                requestInfo.Add(new RequestInfo(history.Id, history, "IpAddress" + i, clientInfo.ips[i], "IpAddress"));
+                requestInfo.Add(new RequestInfo(history.Id, history, "IpAddress" + i, clientInfo.ips[i - 1], "IpAddress"));
             }
             // Add headers
             foreach (var (key, value) in request.Headers)
