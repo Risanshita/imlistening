@@ -54,9 +54,18 @@
     font-weight: 600;
     letter-spacing: 1.4px;
     background-color: blue;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .loginBtn:hover{
     background-color: blue !important;
     box-shadow: 5px 5px 20px blue;
+}
+
+.icon{
+  margin-right: 10px;
+  padding: 0px;
+  
 }

@@ -1,5 +1,7 @@
 import { Button, Checkbox, Form, Input, Row, message, Col } from "antd";
 import "./LoginStyle.css";
+import { AiOutlineLogin} from "react-icons/ai";
+import { FiLock,FiSmile } from "react-icons/fi";
 const Login = (props) => {
   const [messageApi, contextHolder] = message.useMessage();
   const onFinish = (values) => {
@@ -87,7 +89,7 @@ const Login = (props) => {
                 },
               ]}
             >
-              <Input className="userNameField"/>
+              <Input  className="userNameField" />
             </Form.Item>
 
             <h4 className="lable">PASSWORD</h4>
@@ -101,7 +103,7 @@ const Login = (props) => {
                 },
               ]}
             >
-              <Input.Password  className="pwdNameField"/>
+              <Input.Password className="pwdNameField"/>
             </Form.Item>
 
             <Form.Item
@@ -118,7 +120,7 @@ const Login = (props) => {
             //   }}
             >
               <Button className="loginBtn" type="primary" htmlType="submit">
-                LOGIN
+              <AiOutlineLogin className="icon"/>  LOGIN
               </Button>
             </Form.Item>
           </Form>

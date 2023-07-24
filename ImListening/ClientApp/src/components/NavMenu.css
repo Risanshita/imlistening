@@ -21,7 +21,7 @@ html {
 }
 
 .menu{
-  font-size: 20px;
+  font-size: 15px;
   font-weight: 500;
   padding: 10px 20px;
   /* background-color: blue; */
@@ -30,8 +30,16 @@ html {
   text-decoration: none;
   transition: 0.3s;
   color: grey;
+  display: flex;
+  align-items: center;
 }
 .menu:hover{
   letter-spacing: 1.7px;
   color: blue;
+}
+
+.menuIcon{
+  font-size: 20px;
+  margin-right: 5px;
+
 }
