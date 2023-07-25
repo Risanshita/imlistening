@@ -259,7 +259,7 @@ const Urls = () => {
         )}
       /> */}
 
-      <Row justify={"space-between"}>
+      <Row justify={"space-between"} style={{gap:"10px"}}>
         {data.map((e) => (
           <Col xs={24} sm={24} md={11} lg={7} className="urlBox" key={e.id}>
             <h3 className="Urltitle">{e.id}</h3>

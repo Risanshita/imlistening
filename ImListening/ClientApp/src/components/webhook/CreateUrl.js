@@ -5,14 +5,17 @@ import {
   Input,
   Row,
   message,
+  Dropdown,
   Col,
   InputNumber,
 } from "antd";
-import React, { useEffect } from "react";
+import { CaretDownOutlined  } from '@ant-design/icons';
+import React, { useEffect, useState } from "react";
 import { authHeader } from "../../Util";
-
+import Editor, { DiffEditor, useMonaco, loader } from "@monaco-editor/react";
 const CreateUrl = ({ isOpen, onClose, editData }) => {
   const [messageApi, contextHolder] = message.useMessage();
+  const [editorValue, setEditorValue] = useState(); 
   const [form] = Form.useForm();
 
   useEffect(() => {
@@ -35,6 +38,79 @@ const CreateUrl = ({ isOpen, onClose, editData }) => {
     addUrl(values);
   };
 
+  const LangugaeList = [
+    {
+      key: "HTML",
+      label: "HTML",
+    },
+    {
+      key: "CSS",
+      label: "CSS",
+    },
+    {
+      key: "JavaScript",
+      label: "JavaScript",
+    },
+    {
+      key: "JSON",
+      label: "JSON",
+    },
+    {
+      key: "XML",
+      label: "XML",
+    },
+    {
+      key: "PHP",
+      label: "PHP",
+    },
+    {
+      key: "Java",
+      label: "Java",
+    },
+    {
+      key: "Python",
+      label: "Python",
+    },
+  ];
+
+  const itemsList = [
+    {
+      key: "1",
+      label: (
+        <a
+          target="_blank"
+          rel="noopener noreferrer"
+          href="https://www.antgroup.com"
+        >
+          1st menu item
+        </a>
+      ),
+    },
+    {
+      key: "2",
+      label: (
+        <a
+          target="_blank"
+          rel="noopener noreferrer"
+          href="https://www.aliyun.com"
+        >
+          2nd menu item
+        </a>
+      ),
+    },
+    {
+      key: "3",
+      label: (
+        <a
+          target="_blank"
+          rel="noopener noreferrer"
+          href="https://www.luohanacademy.com"
+        >
+          3rd menu item
+        </a>
+      ),
+    },
+  ];
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
   };
@@ -112,6 +188,11 @@ const CreateUrl = ({ isOpen, onClose, editData }) => {
       console.error("Error fetching data:", error);
     }
   };
+
+  function handleEditorChange(value, event) {
+    console.log(value);
+    setEditorValue(value);
+  }
   return (
     <>
       {" "}
@@ -122,11 +203,11 @@ const CreateUrl = ({ isOpen, onClose, editData }) => {
         open={isOpen}
         footer={null}
         onCancel={onClose}
-        className="NewUrlBox" 
+        className="NewUrlBox"
         destroyOnClose={true}
       >
         <div style={{ padding: 0 }}>
-        <h4 className="heading">Create New Url</h4>
+          <h4 className="heading">Create New Url</h4>
           <Form
             form={form}
             name="newurlform"
@@ -196,7 +277,7 @@ const CreateUrl = ({ isOpen, onClose, editData }) => {
             <h4 className="urllable">Expire after minutes</h4>
             <Form.Item
               name={"expireAfterMin"}
-              // label="Expire after minute"
+              
               rules={[
                 {
                   type: "number",
@@ -215,24 +296,42 @@ const CreateUrl = ({ isOpen, onClose, editData }) => {
               <Input placeholder="Url" className="inputField" />
             </Form.Item>
             <h4 className="urllable">Response</h4>
-            <Form.Item name={"response"}>
-              <Input.TextArea rows={5} className="inputField" />
-            </Form.Item>
-
+           
+              {/* <Input.TextArea rows={5} className="inputField" /> */}
+              <div>
+                <Editor
+                  className="codeArea"
+                  height="300px"
+                  defaultLanguage="json"
+                  defaultValue=""
+                  theme="vs-dark"
+                  onChange={handleEditorChange}
+                />
+            
+              </div>
+          <br></br>
             <Form.Item
             // wrapperCol={{
             //   offset: 8,
             //   span: 16,
             // }}
             >
-              <Row justify={"space-between"}>
+              <Row justify={"space-between"} style={{ gap: "10px" }}>
                 <Col xs={24} sm={24} md={11} lg={11} xl={11}>
-                  <Button type="primary" htmlType="submit" className="primaryBtn">
+                  <Button
+                    type="primary"
+                    htmlType="submit"
+                    className="primaryBtn"
+                  >
                     Submit
                   </Button>
                 </Col>
                 <Col xs={24} sm={24} md={11} lg={11} xl={11}>
-                  <Button type="dashed" htmlType="reset" className="secondryBtn">
+                  <Button
+                    type="dashed"
+                    htmlType="reset"
+                    className="secondryBtn"
+                  >
                     Cancel
                   </Button>
                 </Col>
