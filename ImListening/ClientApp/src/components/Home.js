@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { HttpTransportType, HubConnectionBuilder } from '@microsoft/signalr';
 import { authHeader, authdata, getUserId } from '../Util';
 import { Button, Card, Col, Descriptions, List, Row } from 'antd';
+import {  ClockCircleOutlined ,LinkOutlined } from '@ant-design/icons';
 import "./Home_style.css";
 
 
@@ -101,7 +102,7 @@ const Home = () => {
       <h2 className="Heading">Webhook List</h2>
       <Row justify={"space-between"} gutter={40}  >
         <Col xs={24} sm={24} md={8}    className='WebListBox' style={{
-          height: 'calc(100vh - 142px)',
+          height: 'calc(100vh)',
           overflowY: 'auto',
           overflowX: 'hidden',
           padding: 10,
@@ -136,7 +137,7 @@ const WebhookList = ({ webhooks, onItemClick, onItemPreview }) => (
     renderItem={(item) => (
       <List.Item key={item.id} style={{ padding: '5px 0' }}>
         <Card className='historyGrid' title={item.webhookPath}
-          style={{ border: '1px dashed gray', wordWrap: 'break-word' }}
+          style={{ border: "none", wordWrap: 'break-word' }}
 
           headStyle={{ padding: '0 10px', height: 'auto' }}
           hoverable={true}
@@ -145,8 +146,8 @@ const WebhookList = ({ webhooks, onItemClick, onItemPreview }) => (
           onMouseEnter={() => onItemPreview(item)}
           onMouseLeave={() => onItemPreview(null)}
         >
-          <p>Received At: {new Date(item.createAtUtc).toLocaleString()}</p>
-          <p>URL: {'{baseurl}/'+ item.webhookId}</p>
+          <p className='receivedTime'> <ClockCircleOutlined /> Received At: {new Date(item.createAtUtc).toLocaleString()}</p>
+          <p  className='receivedTime'><LinkOutlined /> URL: {'{baseurl}/'+ item.webhookId}</p>
           {/* <Button type="link" onClick={() => onItemClick(item)}>View Details</Button> */}
         </Card>
       </List.Item>

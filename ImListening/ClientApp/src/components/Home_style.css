@@ -23,7 +23,10 @@
     width: 100%;
     background-color: var(--divColor);
     border: 1px dashed var(--blueColor);
-
+    transition: 0.8s box-shadow;
+  }
+  .historyGrid:hover{
+    box-shadow:5px 5px 20px #1A79FA;
   }
 
   .WebListBox{
@@ -37,4 +40,10 @@
   .webdetails{
     color: var(--textColor);
     text-align: center;
+  }
+  .receivedTime{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
   }

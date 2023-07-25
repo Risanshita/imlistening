@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
 
 export const PrivateRoute = () => {
@@ -37,4 +37,6 @@ export function getUserId() {
 export function logout() {
     // remove user from local storage to log user out
     localStorage.removeItem('user');
+   
 }
+

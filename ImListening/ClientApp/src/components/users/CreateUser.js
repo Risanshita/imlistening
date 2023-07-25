@@ -1,5 +1,5 @@
 import { Modal, Button, Form, Input, Row, message, Col } from 'antd';
-
+import "./userStyle.css";
 const CreateUser = ({ isOpen, onClose }) => {
 
     const [messageApi, contextHolder] = message.useMessage();
@@ -52,25 +52,27 @@ const CreateUser = ({ isOpen, onClose }) => {
     return (
         <>   {contextHolder}
             <Modal
-                title="Add new user"
+                // title="Add new user"
                 centered
                 open={isOpen}
                 footer={null}
                 onCancel={onClose}
                 destroyOnClose={true}
             >
+
                 <div style={{ padding: 20 }}>
+                <h4 className="heading">Create New User</h4>
                     <Form
                         name="userform"
-                        labelCol={{
-                            span: 8,
-                        }}
-                        wrapperCol={{
-                            span: 16,
-                        }}
-                        style={{
-                            maxWidth: 600,
-                        }}
+                        // labelCol={{
+                        //     span: 8,
+                        // }}
+                        // wrapperCol={{
+                        //     span: 16,
+                        // }}
+                        // style={{
+                        //     maxWidth: 600,
+                        // }}
                         initialValues={{
                             remember: true,
                         }}
@@ -79,8 +81,9 @@ const CreateUser = ({ isOpen, onClose }) => {
                         autoComplete="off"
                         onReset={onClose}
                     >
+                        <h4 className="urllable">Username</h4>
                         <Form.Item
-                            label="Username"
+                            // label="Username"
                             name="username"
                             rules={[
                                 {
@@ -89,11 +92,11 @@ const CreateUser = ({ isOpen, onClose }) => {
                                 },
                             ]}
                         >
-                            <Input />
+                            <Input   className="inputField" />
                         </Form.Item>
-
+                        <h4 className="urllable">Password</h4>
                         <Form.Item
-                            label="Password"
+                            // label="Password"
                             name="password"
                             rules={[
                                 {
@@ -102,10 +105,11 @@ const CreateUser = ({ isOpen, onClose }) => {
                                 },
                             ]}
                         >
-                            <Input.Password />
+                            <Input.Password   className="inputField"/>
                         </Form.Item>
+                        <h4 className="urllable">Description</h4>
                         <Form.Item
-                            label="Description"
+                            // label="Description"
                             name="description"
                             rules={[
                                 {
@@ -114,23 +118,23 @@ const CreateUser = ({ isOpen, onClose }) => {
                                 },
                             ]}
                         >
-                            <Input />
+                            <Input    className="inputField"/>
                         </Form.Item>
 
                         <Form.Item
-                            wrapperCol={{
-                                offset: 8,
-                                span: 16,
-                            }}
+                            // wrapperCol={{
+                            //     offset: 8,
+                            //     span: 16,
+                            // }}
                         >
                             <Row justify={'space-between'}>
-                                <Col xs={24} sm={24} md={12} lg={12} xl={12}>
-                                    <Button type="primary" htmlType="submit">
+                                <Col xs={24} sm={24} md={12} lg={11} xl={11}>
+                                    <Button type="primary" htmlType="submit"  className="primaryBtn">
                                         Submit
                                     </Button>
                                 </Col>
-                                <Col xs={24} sm={24} md={12} lg={12} xl={12}>
-                                    <Button type="dashed" htmlType="reset">
+                                <Col xs={24} sm={24} md={12} lg={11} xl={11}>
+                                    <Button type="dashed" htmlType="reset"  className="secondryBtn">
                                         Cancel
                                     </Button>
                                 </Col>

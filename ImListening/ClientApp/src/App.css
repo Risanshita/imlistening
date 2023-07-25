@@ -3,7 +3,7 @@
     --textColor : #424242;
     --whiteColor : #FFFFFF;
     --divColor: #FFFFFF;
-    --blueColor : #1A79FA;
+    --blueColor : blue;
     --lableColor : #797979;
 
 }
@@ -13,6 +13,10 @@
     --textColor : #FFFFFF;
     --whiteColor : #FFFFFF;
     --divColor: #555555;
-    --blueColor : #1A79FA;
+    --blueColor : blue ;
     --lableColor : #797979;
+}
+
+body{
+    transition: 0.3s;
 }
