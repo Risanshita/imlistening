@@ -16,3 +16,7 @@
     --blueColor : blue ;
     --lableColor : #797979;
 }
+
+body{
+    transition: 0.3s;
+}

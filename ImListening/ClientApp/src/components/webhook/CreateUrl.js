@@ -8,19 +8,21 @@ import {
   Dropdown,
   Col,
   InputNumber,
+  Select,
 } from "antd";
-import { CaretDownOutlined  } from '@ant-design/icons';
+import { CaretDownOutlined } from "@ant-design/icons";
 import React, { useEffect, useState } from "react";
 import { authHeader } from "../../Util";
 import Editor, { DiffEditor, useMonaco, loader } from "@monaco-editor/react";
 const CreateUrl = ({ isOpen, onClose, editData }) => {
   const [messageApi, contextHolder] = message.useMessage();
-  const [editorValue, setEditorValue] = useState(); 
+  const [editorValue, setEditorValue] = useState();
   const [form] = Form.useForm();
 
   useEffect(() => {
     if (form && editData && editData.id) {
       form.setFieldsValue({ ...editData, path: editData.id });
+      setEditorValue(editData.response);
     } else {
       form.resetFields([
         "path",
@@ -38,79 +40,6 @@ const CreateUrl = ({ isOpen, onClose, editData }) => {
     addUrl(values);
   };
 
-  const LangugaeList = [
-    {
-      key: "HTML",
-      label: "HTML",
-    },
-    {
-      key: "CSS",
-      label: "CSS",
-    },
-    {
-      key: "JavaScript",
-      label: "JavaScript",
-    },
-    {
-      key: "JSON",
-      label: "JSON",
-    },
-    {
-      key: "XML",
-      label: "XML",
-    },
-    {
-      key: "PHP",
-      label: "PHP",
-    },
-    {
-      key: "Java",
-      label: "Java",
-    },
-    {
-      key: "Python",
-      label: "Python",
-    },
-  ];
-
-  const itemsList = [
-    {
-      key: "1",
-      label: (
-        <a
-          target="_blank"
-          rel="noopener noreferrer"
-          href="https://www.antgroup.com"
-        >
-          1st menu item
-        </a>
-      ),
-    },
-    {
-      key: "2",
-      label: (
-        <a
-          target="_blank"
-          rel="noopener noreferrer"
-          href="https://www.aliyun.com"
-        >
-          2nd menu item
-        </a>
-      ),
-    },
-    {
-      key: "3",
-      label: (
-        <a
-          target="_blank"
-          rel="noopener noreferrer"
-          href="https://www.luohanacademy.com"
-        >
-          3rd menu item
-        </a>
-      ),
-    },
-  ];
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
   };
@@ -122,6 +51,7 @@ const CreateUrl = ({ isOpen, onClose, editData }) => {
     }
     try {
       try {
+        values.response = editorValue;
         const response = await fetch("api/webhooks", {
           body: JSON.stringify(values),
           method: "POST",
@@ -157,6 +87,7 @@ const CreateUrl = ({ isOpen, onClose, editData }) => {
   const handleEdit = async (values) => {
     try {
       try {
+        values.response = editorValue;
         const response = await fetch("api/webhooks/" + values.path, {
           body: JSON.stringify(values),
           method: "PUT",
@@ -193,6 +124,39 @@ const CreateUrl = ({ isOpen, onClose, editData }) => {
     console.log(value);
     setEditorValue(value);
   }
+
+  const options = [
+    {
+      value: "text/css",
+      label: "text/css",
+    },
+    {
+      value: "text/csv",
+      label: "text/csv",
+    },
+    {
+      value: "text/html",
+      label: "text/html",
+    },
+    {
+      value: "text/plain",
+      label: "text/plain",
+    },
+    {
+      value: "application/xml",
+      label: "application/xml",
+    },
+    {
+      value: "application/json",
+      label: "application/json",
+    },
+  ];
+  const onChange = (value) => {
+    console.log(`selected ${value}`);
+  };
+  const onSearch = (value) => {
+    console.log("search:", value);
+  };
   return (
     <>
       {" "}
@@ -258,7 +222,20 @@ const CreateUrl = ({ isOpen, onClose, editData }) => {
             </Form.Item>
             <h4 className="urllable">ContentType</h4>
             <Form.Item name={"contentType"}>
-              <Input placeholder="Default text/plain" className="inputField" />
+              {/* <Input placeholder="Default text/plain" className="inputField" /> */}
+              <Select
+                options={options}
+                showSearch
+                placeholder="Select a person"
+                optionFilterProp="children"
+                onChange={onChange}
+                onSearch={onSearch}
+                filterOption={(input, option) =>
+                  (option?.label ?? "")
+                    .toLowerCase()
+                    .includes(input.toLowerCase())
+                }
+              />
             </Form.Item>
             <h4 className="urllable">Timeout(ms)</h4>
             <Form.Item
@@ -277,7 +254,6 @@ const CreateUrl = ({ isOpen, onClose, editData }) => {
             <h4 className="urllable">Expire after minutes</h4>
             <Form.Item
               name={"expireAfterMin"}
-              
               rules={[
                 {
                   type: "number",
@@ -296,20 +272,20 @@ const CreateUrl = ({ isOpen, onClose, editData }) => {
               <Input placeholder="Url" className="inputField" />
             </Form.Item>
             <h4 className="urllable">Response</h4>
-           
-              {/* <Input.TextArea rows={5} className="inputField" /> */}
-              <div>
-                <Editor
-                  className="codeArea"
-                  height="300px"
-                  defaultLanguage="json"
-                  defaultValue=""
-                  theme="vs-dark"
-                  onChange={handleEditorChange}
-                />
-            
-              </div>
-          <br></br>
+
+            {/* <Input.TextArea rows={5} className="inputField" /> */}
+            <div>
+              <Editor
+                className="codeArea"
+                height="300px"
+                defaultLanguage="json"
+                defaultValue=""
+                theme="vs-dark"
+                onChange={handleEditorChange}
+                value={editorValue}
+              />
+            </div>
+            <br></br>
             <Form.Item>
               <Row justify={"space-between"} style={{ gap: "10px" }}>
                 <Col xs={24} sm={24} md={11} lg={11} xl={11}>

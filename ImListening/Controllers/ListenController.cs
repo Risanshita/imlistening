@@ -68,7 +68,7 @@ namespace ImListening.Controllers
             {
                 response.Content = webhook.Response;
             }
-            if (webhook.Timeout != 0)
+            if (webhook.Timeout > 0)
             {
                 await Task.Delay(webhook.Timeout);
             }
