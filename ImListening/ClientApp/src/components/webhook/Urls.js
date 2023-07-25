@@ -15,9 +15,15 @@ import CreateUrl from "./CreateUrl";
 import SyntaxHighlighter from "react-syntax-highlighter";
 import { atomOneDark } from "react-syntax-highlighter/dist/esm/styles/hljs";
 import "./UrlsStyles.css";
-import { CopyOutlined, EditOutlined, DeleteOutlined,LinkOutlined  } from "@ant-design/icons";
+import {
+  CopyOutlined,
+  EditOutlined,
+  DeleteOutlined,
+  LinkOutlined,
+} from "@ant-design/icons";
 import { authHeader } from "../../Util";
 import copyIcon from "../../assets/copy.png";
+import notUrlFound from "../../assets/images/notFoundUrl.png";
 const { Search } = Input;
 
 const response = JSON.parse(`{
@@ -142,18 +148,18 @@ const Urls = () => {
       {contextHolder}
       <Row justify={"space-between"}>
         <h2 className="urlHeading">Manage Url</h2>
-      <Row className="rightBox"  style={{ paddingBottom: 10 }}>
-        <Search
-          placeholder="Url path"
-          allowClear
-          onSearch={onSearch}
-          style={{ paddingLeft: 10, width: 300 }}
-          maxLength={50}
-        />
-        <Button type="primary" className="btn" onClick={showModal}>
-          New Url <LinkOutlined />
-        </Button>
-      </Row>
+        <Row className="rightBox" style={{ paddingBottom: 10 }}>
+          <Search
+            placeholder="Url path"
+            allowClear
+            onSearch={onSearch}
+            style={{ paddingLeft: 10, width: 300 }}
+            maxLength={50}
+          />
+          <Button type="primary" className="btn" onClick={showModal}>
+            New Url <LinkOutlined />
+          </Button>
+        </Row>
       </Row>
 
       {/* <List
@@ -259,72 +265,98 @@ const Urls = () => {
         )}
       /> */}
 
-      <Row justify={"space-between"} style={{gap:"10px"}}>
-        {data.map((e) => (
-          <Col xs={24} sm={24} md={11} lg={7} className="urlBox" key={e.id}>
-            <h3 className="Urltitle">{e.id}</h3>
-            <h4 className="Urllable">
-              Status Code : <span className="boldLable "  style={
+      {data == null || data.length == 0 ? (
+        <Row justify={"center"} align={"middle"} style={{height:"77vh"}}>
+          <img src={notUrlFound} width="200px" />
+        </Row>
+      ) : (
+        <Row justify={"space-between"} style={{ gap: "10px" }}>
+          {data.map((e) => (
+            <Col xs={24} sm={24} md={11} lg={7} className="urlBox" key={e.id}>
+              <h3 className="Urltitle">{e.id}</h3>
+              <h4 className="Urllable">
+                Status Code :{" "}
+                <span
+                  className="boldLable "
+                  style={
                     e.statusCode >= 300
                       ? { color: "red", fontWeight: "bold" }
                       : {}
-                  }> {e.statusCode}</span>
-            </h4>
-            <h4 className="Urllable">
-              Content Type : <span className="boldLable">{e.contentType} </span>
-            </h4>
-            <h4 className="Urllable">
-              Timeout : <span className="boldLable" style={
-                    e.timeout >= 10
-                      ? { color: "red", fontWeight: "bold" }
-                      : {}
-                  }>{e.timeout}</span>
-            </h4>
-            <h4 className="Urllable">
-              Expire on : <span className="boldLable">{new Date(e.expireOnUtc).toLocaleString()}</span>
-            </h4>
-            <h3 className="Urltitle">Response</h3>
-            <div className="codeEditorDiv">
-              <div
-                onClick={() => {
-                  navigator.clipboard.writeText(codeString);
-                  message.success("Code Copy");
-                }}
-                className="copyBtn"
-              >
-                <img src={copyIcon} />{" "}
+                  }
+                >
+                  {" "}
+                  {e.statusCode}
+                </span>
+              </h4>
+              <h4 className="Urllable">
+                Content Type :{" "}
+                <span className="boldLable">{e.contentType} </span>
+              </h4>
+              <h4 className="Urllable">
+                Timeout :{" "}
+                <span
+                  className="boldLable"
+                  style={
+                    e.timeout >= 10 ? { color: "red", fontWeight: "bold" } : {}
+                  }
+                >
+                  {e.timeout}
+                </span>
+              </h4>
+              <h4 className="Urllable">
+                Expire on :{" "}
+                <span className="boldLable">
+                  {new Date(e.expireOnUtc).toLocaleString()}
+                </span>
+              </h4>
+              <h3 className="Urltitle">Response</h3>
+              <div className="codeEditorDiv">
+                <div
+                  onClick={() => {
+                    navigator.clipboard.writeText(codeString);
+                    message.success("Code Copy");
+                  }}
+                  className="copyBtn"
+                >
+                  <img src={copyIcon} />{" "}
+                </div>
+                <SyntaxHighlighter
+                  customStyle={{ borderRadius: "10px", padding: "10px" }}
+                  className="codeEditor"
+                  language="json"
+                  style={atomOneDark}
+                  wrapLongLines={false}
+                >
+                  {e.response}
+                </SyntaxHighlighter>
               </div>
-              <SyntaxHighlighter
-                customStyle={{ borderRadius: "10px", padding: "10px" }}
-                className="codeEditor"
-                language="json"
-                style={atomOneDark}
-                wrapLongLines={false}
+              <Row
+                className="bottomButton"
+                justify={"space-between"}
+                align={"middle"}
               >
-                {e.response}
-              </SyntaxHighlighter>
-            </div>
-            <Row className="bottomButton" justify={"space-between"} align={"middle"}>
-              <div className="secondBtn"  onClick={() => handleEdit(e)}>
-                <EditOutlined key="edit"  />
-                Edit
-              </div>
-              <Popconfirm
+                <div className="secondBtn" onClick={() => handleEdit(e)}>
+                  <EditOutlined key="edit" />
+                  Edit
+                </div>
+                <Popconfirm
                   key={"user_table_action" + e.id}
                   title="Sure to delete?"
                   onConfirm={() => handleDelete(e)}
                 >
-              <div className="secondBtn">
-                <DeleteOutlined key="delete" /> Delete
-              </div>
-              </Popconfirm>,
-              <div className="secondBtn" onClick={()=>handleCopy(e)}>
-                <CopyOutlined key="copy" /> Url
-              </div>
-            </Row>
-          </Col>
-        ))}
-      </Row>
+                  <div className="secondBtn">
+                    <DeleteOutlined key="delete" /> Delete
+                  </div>
+                </Popconfirm>
+                ,
+                <div className="secondBtn" onClick={() => handleCopy(e)}>
+                  <CopyOutlined key="copy" /> Url
+                </div>
+              </Row>
+            </Col>
+          ))}
+        </Row>
+      )}
 
       {
         <CreateUrl

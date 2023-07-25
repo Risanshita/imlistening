@@ -310,12 +310,7 @@ const CreateUrl = ({ isOpen, onClose, editData }) => {
             
               </div>
           <br></br>
-            <Form.Item
-            // wrapperCol={{
-            //   offset: 8,
-            //   span: 16,
-            // }}
-            >
+            <Form.Item>
               <Row justify={"space-between"} style={{ gap: "10px" }}>
                 <Col xs={24} sm={24} md={11} lg={11} xl={11}>
                   <Button
