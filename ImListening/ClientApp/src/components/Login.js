@@ -2,8 +2,12 @@ import { Button, Checkbox, Form, Input, Row, message, Col } from "antd";
 import "./LoginStyle.css";
 import { AiOutlineLogin} from "react-icons/ai";
 import { FiLock,FiSmile } from "react-icons/fi";
+import useSelection from "antd/es/table/hooks/useSelection";
+import { useState } from "react";
+import { setIslogin } from "../Util";
 const Login = (props) => {
   const [messageApi, contextHolder] = message.useMessage();
+ const [isLogin, setIslogin]=useState()
   const onFinish = (values) => {
     console.log("Success:", values);
     login(values);
@@ -39,6 +43,8 @@ const Login = (props) => {
             type: "success",
             content: "Login successful!",
           });
+          message.success("Login Success");
+        setIslogin(true);
           console.log(props);
           window.location.href = "/";
         }

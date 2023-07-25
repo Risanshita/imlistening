@@ -70,3 +70,96 @@
   background-color: transparent !important;
   box-shadow: 5px 5px 10px gray;
 }
+
+
+
+
+/* new style */
+
+.urlBox{
+  width: 350px;
+  background-color: white;
+  /* height: 450px; */
+  border-radius: 10px;
+  /* margin: 10px; */
+  transition: 0.4s;
+  padding: 15px;
+}
+
+.urlBox:hover{
+  box-shadow: 2px 2px 20px var(--blueColor);
+}
+
+.Urltitle{
+  font-size: 15px;
+}
+
+.boldLable{
+  color: black;
+  font-weight: 500;
+}
+
+.codeEditor{
+  height: 250px;
+  font-size: 15px;
+  overflow: scroll;
+}
+
+.codeEditor::-webkit-scrollbar {
+  width: 0px; 
+}
+
+.codeEditor::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.codeEditor::-webkit-scrollbar-thumb {
+  background: transparent; 
+}
+
+
+
+
+.codeEditorDiv{
+  /* background-color: aqua; */
+  /* height: 250px;
+  overflow: scroll; */
+}
+
+.copyBtn{
+  cursor: pointer;
+  position: absolute;
+  right: 15px;
+}
+
+.bottomButton{
+  
+  /* justify-content: center; */
+}
+
+.secondBtn{
+  display: flex;
+  align-items: center;
+  align-content: center;
+  gap: 10px;
+  cursor: pointer;
+  background-color: rgb(226, 241, 255);
+  padding: 5px 10px;
+  border-radius: 10px;
+  font-weight: 400;
+}
+
+.btn{
+  display: flex;
+  align-items: center;
+  background-color: var(--blueColor);
+  color: white;
+}
+
+.Urllable{
+  font-size: 16px;
+  font-weight: 400;
+}
+.rightBox{
+  gap: 10px;
+}
