@@ -1,0 +1,28 @@
+version: '3.4'
+
+services:
+  imlistening:
+    image: ${DOCKER_REGISTRY-}imlistening
+    build:
+      context: .
+      dockerfile: ImListening/Dockerfile
+    networks:
+      - localnet
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+      ASPNETCORE_HOSTINGSTARTUPASSEMBLIES: Microsoft.AspNetCore.SpaProxy
+    ports:
+      - '8081:80'
+      - '443:443'
+
+  mongodb:
+    image: mongodb/mongodb-atlas-kubernetes-operator:v1.5.0
+    ports:
+      - '27019:27017'
+    networks:
+      - localnet
+      
+networks:
+  localnet:
+    attachable: true
+
