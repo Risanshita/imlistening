@@ -32,28 +32,14 @@ export class NavMenu extends Component {
             <img src={logo} alt="Logo" className="header-logo" />
           </NavbarBrand>
           <NavbarToggler onClick={this.toggleNavbar} className="mr-2" />
-          <Collapse className="d-sm-inline-flex flex-sm-row-reverse" isOpen={!this.state.collapsed} navbar>
+          <Collapse className="d-sm-inline-flex flex-sm-row-reverse" isOpen={!this.state.collapsed}  navbar>
             <ul className="navbar-nav flex-grow">
-              {/* <NavItem>
-                <NavLink tag={Link} className="text-dark" to="/">History</NavLink>
-              </NavItem>
-              <NavItem>
-                <NavLink tag={Link} className="text-dark" to="/users">Users</NavLink>
-              </NavItem>
-              <NavItem>
-                <NavLink tag={Link} className="text-dark" to="/urls">Urls</NavLink>
-              </NavItem>
-              <NavItem>
-                <NavLink tag={Link} onClick={logout} className="text-dark" to="/login">Login</NavLink>
-              </NavItem> */}
               <NavLink tag={Link} className='menu' to="/"><AiFillHome className='menuIcon'/> Home</NavLink>
               <NavLink tag={Link} className='menu' to="/"><AiOutlineHistory className='menuIcon'/>History</NavLink>
               <NavLink tag={Link} className='menu' to="/Users"><AiOutlineTeam className='menuIcon'/>Users</NavLink>
               <NavLink tag={Link} className='menu' to="/urls"><AiOutlinePaperClip className='menuIcon'/>Urls</NavLink>
               <NavLink tag={Link} onClick={logout} className='menu' to="/login"><AiOutlineLogin className='menuIcon'/>Login</NavLink>
             </ul>
-
-
           </Collapse>
         </Navbar>
       </header>

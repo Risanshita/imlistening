@@ -15,8 +15,17 @@ import React, { useEffect, useState } from "react";
 import { authHeader } from "../../Util";
 import Editor, { DiffEditor, useMonaco, loader } from "@monaco-editor/react";
 const CreateUrl = ({ isOpen, onClose, editData }) => {
+  const languageMap = {
+    "text/css": "css",
+    "text/csv": "csv",
+    "text/html": "html",
+    "text/plain": "txt",
+    "application/xml": "xml",
+    "application/json": "json",
+  };
   const [messageApi, contextHolder] = message.useMessage();
   const [editorValue, setEditorValue] = useState();
+  const [language, setlanguage] = useState("json");
   const [form] = Form.useForm();
 
   useEffect(() => {
@@ -74,6 +83,7 @@ const CreateUrl = ({ isOpen, onClose, editData }) => {
             type: "success",
             content: "URL created!",
           });
+          setEditorValue("");
           onClose();
         }
       } catch (error) {
@@ -152,7 +162,8 @@ const CreateUrl = ({ isOpen, onClose, editData }) => {
     },
   ];
   const onChange = (value) => {
-    console.log(`selected ${value}`);
+    setlanguage(languageMap[value]);
+    console.log(`selected ${language}`);
   };
   const onSearch = (value) => {
     console.log("search:", value);
@@ -278,8 +289,7 @@ const CreateUrl = ({ isOpen, onClose, editData }) => {
               <Editor
                 className="codeArea"
                 height="300px"
-                defaultLanguage="json"
-                defaultValue=""
+                language={language}
                 theme="vs-dark"
                 onChange={handleEditorChange}
                 value={editorValue}

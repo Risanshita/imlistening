@@ -47,6 +47,14 @@ const response = JSON.parse(`{
     "failedCount": 0
   }`);
 const Urls = () => {
+   const languageMap = {
+    "text/css": "css",
+    "text/csv": "csv",
+    "text/html": "html",
+    "text/plain": "txt",
+    "application/xml": "xml",
+    "application/json": "json",
+  };
   const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [open, setOpen] = useState(false);
@@ -162,108 +170,6 @@ const Urls = () => {
         </Row>
       </Row>
 
-      {/* <List
-        className="demoBox"
-        grid={{
-          gutter: 30,
-          xs: 1,
-          sm: 1,
-          md: 2,
-          lg: 2,
-          xl: 3,
-          xxl: 4,
-        }}
-        size="small"
-        dataSource={data}
-        renderItem={(item) => (
-          <List.Item className="CardList">
-            <Card
-              title={<>{item.id}</>}
-              style={{
-                border: "1px dashed gray",
-                width: 330,
-                height: 430,
-                wordWrap: "break-word",
-              }}
-              actions={[
-                <Popconfirm
-                  key={"user_table_action" + item.id}
-                  title="Sure to delete?"
-                  onConfirm={() => handleDelete(item)}
-                >
-                  <Button
-                    type="text"
-                    shape="circle"
-                    icon={<DeleteOutlined key="delete" />}
-                    size={20}
-                    danger
-                  />
-                </Popconfirm>,
-                <Button
-                  key={"user_table_action_B1" + item.id}
-                  onClick={() => handleEdit(item)}
-                  type="text"
-                  shape="circle"
-                  icon={<EditOutlined key="edit" style={{ color: "blue" }} />}
-                  size={20}
-                />,
-                <Button
-                  key={"user_table_action_B1" + item.id}
-                  onClick={() => handleCopy(item)}
-                  type="text"
-                  shape="circle"
-                  icon={<CopyOutlined key="copy" />}
-                  size={20}
-                />,
-              ]}
-              headStyle={{ padding: 5, minHeight: 30 }}
-              hoverable={true}
-              bodyStyle={{ padding: 10, height: 330 }}
-            >
-              <Row style={{ paddingBottom: 5 }}>
-                Status Code:&nbsp;
-                <span
-                  style={
-                    item.statusCode >= 300
-                      ? { color: "red", fontWeight: "bold" }
-                      : {}
-                  }
-                >
-                  {" "}
-                  {item.statusCode}
-                </span>
-              </Row>
-              <Row style={{ paddingBottom: 5 }}>
-                Content Type:&nbsp;{item.contentType}
-              </Row>
-              <Row style={{ paddingBottom: 5 }}>
-                Timeout:&nbsp;
-                <span
-                  style={
-                    item.timeout >= 10
-                      ? { color: "red", fontWeight: "bold" }
-                      : {}
-                  }
-                >
-                  {item.timeout}
-                </span>{" "}
-              </Row>
-              <Row style={{ paddingBottom: 5 }}>
-                Expire on:&nbsp;{new Date(item.expireOnUtc).toLocaleString()}
-              </Row>
-              <Row style={{ paddingBottom: 5 }}>
-                <span style={{ fontWeight: "bold" }}>Response: </span>
-              </Row>
-              <textArea
-                rows={8}
-                value={item.response}
-                disabled
-                style={{ color: "black" }}
-              />
-            </Card>
-          </List.Item>
-        )}
-      /> */}
 
       {data == null || data.length == 0 ? (
         <Row justify={"center"} align={"middle"} style={{height:"77vh"}}>
@@ -323,7 +229,7 @@ const Urls = () => {
                 <SyntaxHighlighter
                   customStyle={{ borderRadius: "10px", padding: "10px" }}
                   className="codeEditor"
-                  language="json"
+                  language={languageMap[e.contentType] ?? "json"}
                   style={atomOneDark}
                   wrapLongLines={false}
                 >
