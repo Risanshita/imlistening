@@ -44,10 +44,6 @@ To run the ImListening application locally, follow these steps:
 
 Contributions are welcome! If you find a bug or have a feature suggestion, please open an issue or submit a pull request. Make sure to follow the project's coding style and guidelines.
 
-## License
-
-The ImListening project is licensed under the [MIT License](https://opensource.org/licenses/MIT). Feel free to use, modify, and distribute the code as per the terms of the license.
-
 ## Acknowledgements
 
 - The project was inspired by webhook.site (https://webhook.site)
