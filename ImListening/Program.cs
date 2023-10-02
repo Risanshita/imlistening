@@ -1,5 +1,8 @@
 
+using Common.ImListening.DbContexts;
+using Common.ImListening.Repositories;
 using Common.ImListening.Repositories.InMemoryDb;
+using Common.ImListening.Repositories.MongoDb;
 using Core.ImListening;
 using Core.ImListening.DbModels;
 using Core.ImListening.Services;
@@ -55,26 +58,22 @@ namespace ImListening
                         .AllowCredentials();
                 });
             });
-
-            builder.Services.AddDbContext<InMemoryDbContext>(options =>
+            var dbType = builder.Configuration.GetValue<string>("DbType");
+            if (dbType == "InMemory")
             {
-                var dbType = builder.Configuration.GetValue<string>("DbType");
-                if (dbType == "SqlServer")
-                {
-
-                    var connectionString = builder.Configuration.GetConnectionString("SqlServer");
-                    options.UseSqlServer(connectionString);
-                }
-                else if (dbType == "InMemory")
+                builder.Services.AddDbContext<InMemoryDbContext>(options =>
                 {
                     options.UseInMemoryDatabase("ImListeningDb");
-                }
-                else
-                {
-                    throw new InvalidOperationException("Invalid db type value. supported value is InMemory and SqlServer");
-                }
-            });
-            _ = builder.Services.AddTransient<DbContext>((a) => a.GetService<InMemoryDbContext>());
+                });
+                _ = builder.Services.AddTransient<DbContext>((a) => a.GetService<InMemoryDbContext>());
+                builder.Services.AddTransient(typeof(IMongoDbRepository<>), typeof(InMemoryDbRepository<>));
+            }
+            else
+            {
+                builder.Services.AddSingleton(typeof(MongoDbContext<>));
+                builder.Services.Configure<MongoDbConfigs>(builder.Configuration.GetSection(MongoDbConfigs.Option));
+                builder.Services.AddTransient(typeof(IMongoDbRepository<>), typeof(MongoDbRepository<>));
+            }
 
             // Business Services
             builder.Services.AddServices();

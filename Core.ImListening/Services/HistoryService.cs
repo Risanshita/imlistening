@@ -1,4 +1,5 @@
-﻿using Common.ImListening.Repositories.InMemoryDb;
+﻿using Common.ImListening.Repositories;
+using Common.ImListening.Repositories.InMemoryDb;
 using Core.ImListening.DbModels;
 using Core.ImListening.Services.Interfaces;
 using Microsoft.AspNetCore.SignalR;
@@ -7,9 +8,9 @@ namespace Core.ImListening.Services
 {
     public class HistoryService : IHistoryService
     {
-        private readonly IRepository<History> _repository;
+        private readonly IMongoDbRepository<History> _repository;
 
-        public HistoryService(IRepository<History> repository)
+        public HistoryService(IMongoDbRepository<History> repository)
         {
             _repository = repository;
         }

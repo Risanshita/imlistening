@@ -12,6 +12,6 @@
 
         public DateTime CreateAtUtc { get; set; } = DateTime.UtcNow;
 
-        public ICollection<RequestInfo> RequestInfos { get; set; }
+        public List<RequestInfo> RequestInfos { get; set; }
     }
 }

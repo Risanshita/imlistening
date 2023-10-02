@@ -1,4 +1,4 @@
-﻿using Common.ImListening.Repositories.InMemoryDb;
+﻿using Common.ImListening.Repositories;
 using Core.ImListening.ApiModels;
 using Core.ImListening.DbModels;
 using Core.ImListening.Services.Interfaces;
@@ -7,9 +7,9 @@ namespace Core.ImListening.Services
 {
     public class UserService : IUserService
     {
-        private readonly IRepository<User> _repository;
+        private readonly IMongoDbRepository<User> _repository;
 
-        public UserService(IRepository<User> genericRepository)
+        public UserService(IMongoDbRepository<User> genericRepository)
         {
             _repository = genericRepository;
         }
@@ -34,7 +34,7 @@ namespace Core.ImListening.Services
 
         public Task DeleteUserAsync(User user)
         {
-            return _repository.DeleteAsync(user);
+            return _repository.DeleteAsync(user,user.Id);
         }
 
         public async Task<User?> GetUserByIdAsync(string id)
@@ -54,7 +54,7 @@ namespace Core.ImListening.Services
             user.Password = request.Password;
             user.Description = request.Description;
 
-            return _repository.UpdateAsync(user);
+            return _repository.UpdateAsync(user, user.Id);
         }
     }
 }
