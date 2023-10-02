@@ -52,14 +52,14 @@ namespace Common.ImListening.Repositories.InMemoryDb
             await _context.SaveChangesAsync();
         }
 
-        public Task UpdateAsync(T entity)
+        public Task UpdateAsync(T entity, string id)
         {
             _dbSet.Update(entity);
             _context.Entry(entity).State = EntityState.Modified;
             return _context.SaveChangesAsync();
         }
 
-        public Task DeleteAsync(T entity)
+        public Task DeleteAsync(T entity,string id)
         {
             _dbSet.Remove(entity);
             _context.Entry(entity).State = EntityState.Deleted;
@@ -70,7 +70,7 @@ namespace Common.ImListening.Repositories.InMemoryDb
         {
             var entity = GetByIdAsync(key).Result;
             if (entity != null)
-                DeleteAsync(entity);
+                DeleteAsync(entity,key);
         }
 
         public Task DeleteRangeAsync(IEnumerable<T> entities)
@@ -89,11 +89,11 @@ namespace Common.ImListening.Repositories.InMemoryDb
             SetKeyAndExpiry(key, value, expiry);
             CreateAsync(value).Wait();
         }
-
+         
         public void Update(string key, T value, TimeSpan? expiry = null)
         {
             SetKeyAndExpiry(key, value, expiry);
-            UpdateAsync(value);
+            UpdateAsync(value,key);
         }
 
         private void SetKeyAndExpiry(string key, T value, TimeSpan? expiry = null)
@@ -101,7 +101,7 @@ namespace Common.ImListening.Repositories.InMemoryDb
             value.SetPropertyIfExists("Id", key);
             value.SetPropertyIfExists<T, DateTime?>("ExpireOnUtc", expiry == null ? null : DateTime.UtcNow.Add((TimeSpan)expiry));
         }
-
+         
         public IAsyncEnumerable<T> FindAsync(Expression<Func<T, bool>> predicate, Expression<Func<T, object>> include, int skip, int take, Expression<Func<T, object>> orderBy, bool ascending = false)
         {
             var dbSet = _dbSet.Include(include); 

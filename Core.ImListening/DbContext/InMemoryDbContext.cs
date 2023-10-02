@@ -27,11 +27,6 @@ namespace Common.ImListening.Repositories.InMemoryDb
             //    }
             //);
 
-            modelBuilder.Entity<History>()
-                .HasMany(m => m.RequestInfos)
-                .WithOne(d => d.History)
-                .HasForeignKey(d => d.HistoryId)
-                .OnDelete(DeleteBehavior.Cascade);
         }
         public DbSet<User> Users { get; set; }
         public DbSet<History> Histories { get; set; }

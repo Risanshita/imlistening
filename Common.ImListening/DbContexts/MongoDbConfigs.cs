@@ -1,0 +1,16 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Common.ImListening.DbContexts
+{
+    public class MongoDbConfigs
+    {
+        public const string Option = "MongoDbConfigs";
+        public string ConnectionString { get; set; }
+        public string DatabaseName { get; set; }
+        public bool EnableCommandTracing { get; set; }
+    }
+}

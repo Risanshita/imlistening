@@ -1,9 +1,10 @@
 ﻿using Microsoft.Extensions.Logging;
 using StackExchange.Redis;
+using System.Linq.Expressions;
 
 namespace Common.ImListening.Repositories.Redis
 {
-    public class RedisCacheRepository<T> : IGenericRepository<T>
+    public class RedisCacheRepository<T> : IMongoDbRepository<T>
     {
         private readonly IDatabase _redisDatabase;
         private readonly ILogger<RedisCacheRepository<T>> _logger;
@@ -29,7 +30,8 @@ namespace Common.ImListening.Repositories.Redis
             }   
         }
 
-        public void Delete(string key)
+        public void Delete(string key
+            )
         {
             try
             {
@@ -75,6 +77,56 @@ namespace Common.ImListening.Repositories.Redis
         {
             // Implement your deserialization logic here
             return (T)Convert.ChangeType(serializedValue, typeof(T));
+        }
+
+        public ValueTask<T?> GetByIdAsync(string id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IAsyncEnumerable<T> GetAllAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        public IAsyncEnumerable<T> FindAsync(Expression<Func<T, bool>> predicate)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IAsyncEnumerable<T> FindAsync(Expression<Func<T, bool>> predicate, int skip, int take, Expression<Func<T, object>> orderBy, bool ascending = false)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IAsyncEnumerable<T> FindAsync(Expression<Func<T, bool>> predicate, Expression<Func<T, object>> include, int skip, int take, Expression<Func<T, object>> orderBy, bool ascending = false)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task CreateAsync(T entity)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task AddRangeAsync(IEnumerable<T> entities)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task UpdateAsync(T entity,string id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task DeleteAsync(T entity,string id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task DeleteRangeAsync(IEnumerable<T> entities)
+        {
+            throw new NotImplementedException();
         }
     }
 }

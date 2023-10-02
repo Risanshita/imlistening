@@ -18,17 +18,10 @@ namespace ImListening.Controllers
         }
 
         [HttpGet]
-        public async IAsyncEnumerable<History> GetHistoryAsync([FromQuery] string? webhookPath = null, [FromQuery] int take = 20, [FromQuery] int skip = 0)
+        public IAsyncEnumerable<History> GetHistoryAsync([FromQuery] string? webhookPath = null, [FromQuery] int take = 20, [FromQuery] int skip = 0)
         {
             var ls = _historyService.GetHistoryAsync(UserId, webhookPath, take, skip);
-            await foreach (var item in ls)
-            {
-                foreach (var a in item.RequestInfos)
-                {
-                    a.History = null;
-                }
-                yield return item;
-            }
+            return ls;
         }
     }
 }
