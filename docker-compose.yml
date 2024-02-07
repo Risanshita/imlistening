@@ -12,8 +12,7 @@ services:
       ASPNETCORE_ENVIRONMENT: Production
       ASPNETCORE_HOSTINGSTARTUPASSEMBLIES: Microsoft.AspNetCore.SpaProxy
     ports:
-      - '8081:80'
-      - '443:443'
+      - '8081:44428'
 
   mongodb:
     image: mongo:latest
