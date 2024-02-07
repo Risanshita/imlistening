@@ -56,7 +56,8 @@ namespace ImListening
                 {
                     policy.AllowAnyHeader()
                         .AllowAnyMethod()
-                        .AllowAnyOrigin();
+                        .WithOrigins("https://localhost:44428")
+                        .AllowCredentials();
                 });
             });
 
