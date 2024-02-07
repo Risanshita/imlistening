@@ -16,7 +16,7 @@ services:
       - '443:443'
 
   mongodb:
-    image: mongodb/mongodb-atlas-kubernetes-operator:v1.5.0
+    image: mongo:latest
     ports:
       - '27019:27017'
     networks:
