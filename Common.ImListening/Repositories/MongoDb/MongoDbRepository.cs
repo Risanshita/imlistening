@@ -38,7 +38,7 @@ namespace Common.ImListening.Repositories.MongoDb
 
         public async Task ReplaceOneAsync(Expression<Func<T, bool>> predicate, T item)
         {
-          await _collection.ReplaceOneAsync(predicate, item);
+          await _collection.ReplaceOneAsync(predicate, item, new ReplaceOptions { IsUpsert = true});
         }
 
         public async void Delete(string id)
