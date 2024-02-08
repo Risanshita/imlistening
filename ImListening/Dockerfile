@@ -2,8 +2,10 @@
 
 FROM mcr.microsoft.com/dotnet/aspnet:7.0 AS base
 WORKDIR /app
+
 EXPOSE 80
 EXPOSE 443
+EXPOSE 44428
 
 RUN apt-get update
 RUN apt-get install -y curl
@@ -34,4 +36,20 @@ RUN dotnet publish "ImListening.csproj" -c Release -o /app/publish /p:UseAppHost
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
+
+
+# Generate a self-signed certificate
+RUN openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -days 365 -nodes -subj "/CN=localhost"
+
+# Convert the certificate and key to a PFX file
+RUN openssl pkcs12 -export -out certificate.pfx -inkey key.pem -in cert.pem -password pass:yourpassword
+
+# Set environment variables to configure HTTPS
+ENV ASPNETCORE_URLS=https://+:443;http://+:80
+ENV ASPNETCORE_HTTPS_PORT=443
+ENV ASPNETCORE_Kestrel__Certificates__Default__Path=/app/certificate.pfx
+ENV ASPNETCORE_Kestrel__Certificates__Default__Password=yourpassword
+
+
+
 ENTRYPOINT ["dotnet", "ImListening.dll"]

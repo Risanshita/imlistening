@@ -1,11 +1,11 @@
-﻿using Common.ImListening.Repositories;
+using Common.ImListening.Repositories.MongoDb;
 using Core.ImListening.ApiModels;
 using Core.ImListening.DbModels;
 using Core.ImListening.Services.Interfaces;
 
 namespace Core.ImListening.Services
 {
-    public class UserService : IUserService
+  public class UserService : IUserService
     {
         private readonly IMongoDbRepository<User> _repository;
 
@@ -23,7 +23,7 @@ namespace Core.ImListening.Services
 
         public Task CreateUserAsync(UserRequest request, string role = "User")
         {
-            return _repository.CreateAsync(new User
+            return _repository.ReplaceOneAsync(a => a.Id == request.Username, new User
             {
                 Description = request.Description,
                 Id = request.Username,

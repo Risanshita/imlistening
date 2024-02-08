@@ -1,4 +1,4 @@
-﻿using Common.ImListening.DbContexts;
+using Common.ImListening.DbContexts;
 using Common.ImListening.Extensions;
 using MongoDB.Driver;
 using System.Diagnostics;
@@ -6,7 +6,7 @@ using System.Linq.Expressions;
 
 namespace Common.ImListening.Repositories.MongoDb
 {
-    public class MongoDbRepository<T> : IMongoDbRepository<T>
+  public class MongoDbRepository<T> : IMongoDbRepository<T>
     {
         private readonly IMongoCollection<T> _collection;
 
@@ -34,6 +34,11 @@ namespace Common.ImListening.Repositories.MongoDb
         public async Task CreateAsync(T item)
         {
             await _collection.InsertOneAsync(item);
+        }
+
+        public async Task ReplaceOneAsync(Expression<Func<T, bool>> predicate, T item)
+        {
+          await _collection.ReplaceOneAsync(predicate, item);
         }
 
         public async void Delete(string id)

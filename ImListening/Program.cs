@@ -1,7 +1,6 @@
 
 using Amazon.Runtime.Internal.Util;
 using Common.ImListening.DbContexts;
-using Common.ImListening.Repositories;
 using Common.ImListening.Repositories.InMemoryDb;
 using Common.ImListening.Repositories.MongoDb;
 using Core.ImListening;
@@ -16,7 +15,7 @@ using NSwag.Generation.Processors.Security;
 
 namespace ImListening
 {
-    public static class Program
+  public static class Program
     {
         public static void Main(string[] args)
         {

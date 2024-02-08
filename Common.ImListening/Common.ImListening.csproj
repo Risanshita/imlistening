@@ -19,6 +19,7 @@
 
 	<ItemGroup>
 		<Folder Include="Logger\" />
+		<Folder Include="Repositories\Redis\" />
 	</ItemGroup>
 
 </Project>

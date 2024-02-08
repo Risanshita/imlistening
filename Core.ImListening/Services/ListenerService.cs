@@ -1,5 +1,5 @@
-﻿using Common.ImListening.Repositories;
-using Common.ImListening.Repositories.InMemoryDb;
+﻿using Common.ImListening.Repositories.InMemoryDb;
+using Common.ImListening.Repositories.MongoDb;
 using Core.ImListening.DbModels;
 using Core.ImListening.Services.Interfaces;
 using Microsoft.AspNetCore.Http;
@@ -12,7 +12,7 @@ using System.Text;
 
 namespace Core.ImListening.Services
 {
-    public class ListenerService : IListenerService
+  public class ListenerService : IListenerService
     {
         private readonly IMongoDbRepository<History> _repository;
         private readonly IHubContext<ChatHub> _chatHub;

@@ -1,4 +1,3 @@
-﻿using Common.ImListening.Repositories.InMemoryDb;
 using Common.ImListening.Repositories.MongoDb;
 using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Driver;
@@ -29,7 +28,7 @@ namespace Common.ImListening.Extensions
 
         public static IServiceCollection AddRepository(this IServiceCollection services)
         {
-            services.AddTransient(typeof(IRepository<>), typeof(MongoDbRepository<>));
+            services.AddTransient(typeof(IMongoDbRepository<>), typeof(MongoDbRepository<>));
             return services;
         }
     }

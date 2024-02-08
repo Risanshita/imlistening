@@ -1,12 +1,12 @@
-﻿using Common.ImListening.Repositories;
-using Common.ImListening.Repositories.InMemoryDb;
+﻿using Common.ImListening.Repositories.InMemoryDb;
+using Common.ImListening.Repositories.MongoDb;
 using Core.ImListening.ApiModels;
 using Core.ImListening.DbModels;
 using Core.ImListening.Services.Interfaces;
 
 namespace Core.ImListening.Services
 {
-    public class WebhookService : IWebhookService
+  public class WebhookService : IWebhookService
     {
         private readonly IMongoDbRepository<Webhook> _repository;
 
