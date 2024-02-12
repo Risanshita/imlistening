@@ -39,6 +39,7 @@ namespace ImListening.Controllers
         [HttpPost]
         public async Task<ActionResult> CreateWebhook([FromBody] WebhookRequest request)
         {
+            ListenController.LoadTestingUrls.TryAdd("","");
             var webhook = await _webhookService.GetWebhookByIdAsync(request.Path);
             if (webhook == null)
             {
