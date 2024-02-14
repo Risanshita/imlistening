@@ -12,7 +12,7 @@ using System.Text;
 
 namespace Core.ImListening.Services
 {
-  public class ListenerService : IListenerService
+    public class ListenerService : IListenerService
     {
         private readonly IMongoDbRepository<History> _repository;
         private readonly IHubContext<ChatHub> _chatHub;
@@ -61,7 +61,7 @@ namespace Core.ImListening.Services
                 _logger.LogError("Exception while processing request.", ex);
             }
         }
-
+         
         private async Task ForwardMessage(Webhook webhook, History history)
         {
             if (!string.IsNullOrWhiteSpace(webhook.ForwardTo))
@@ -104,25 +104,25 @@ namespace Core.ImListening.Services
             var clientInfo = GetIPAddress(request.Headers, request.HttpContext.Connection.RemoteIpAddress);
 
             // Add general request information
-            requestInfo.Add(new RequestInfo(history.Id,  "Method", request.Method));
-            requestInfo.Add(new RequestInfo(history.Id,  "Protocol", request.Protocol));
-            requestInfo.Add(new RequestInfo(history.Id,  "Scheme", request.Scheme));
-            requestInfo.Add(new RequestInfo(history.Id,  "Host", request.Host.ToString()));
-            requestInfo.Add(new RequestInfo(history.Id,  "Path", request.Path));
-            requestInfo.Add(new RequestInfo(history.Id,  "QueryString", request.QueryString.ToString()));
+            requestInfo.Add(new RequestInfo(history.Id, "Method", request.Method));
+            requestInfo.Add(new RequestInfo(history.Id, "Protocol", request.Protocol));
+            requestInfo.Add(new RequestInfo(history.Id, "Scheme", request.Scheme));
+            requestInfo.Add(new RequestInfo(history.Id, "Host", request.Host.ToString()));
+            requestInfo.Add(new RequestInfo(history.Id, "Path", request.Path));
+            requestInfo.Add(new RequestInfo(history.Id, "QueryString", request.QueryString.ToString()));
 
             // Ip info
 
-            requestInfo.Add(new RequestInfo(history.Id,  "HostName", clientInfo.hostName, "IpAddress"));
+            requestInfo.Add(new RequestInfo(history.Id, "HostName", clientInfo.hostName, "IpAddress"));
             requestInfo.Add(new RequestInfo(history.Id, "Aliases", clientInfo.aliases, "IpAddress"));
             for (int i = 1; i <= clientInfo.ips.Count; i++)
             {
-                requestInfo.Add(new RequestInfo(history.Id,  "IpAddress" + i, clientInfo.ips[i - 1], "IpAddress"));
+                requestInfo.Add(new RequestInfo(history.Id, "IpAddress" + i, clientInfo.ips[i - 1], "IpAddress"));
             }
             // Add headers
             foreach (var (key, value) in request.Headers)
             {
-                requestInfo.Add(new RequestInfo(history.Id,  key, value.ToString(), "Header"));
+                requestInfo.Add(new RequestInfo(history.Id, key, value.ToString(), "Header"));
             }
 
             // Add form data
@@ -131,7 +131,7 @@ namespace Core.ImListening.Services
                 var form = request.Form;
                 foreach (var (key, value) in form)
                 {
-                    requestInfo.Add(new RequestInfo(history.Id,  key, value.ToString(), "Form"));
+                    requestInfo.Add(new RequestInfo(history.Id, key, value.ToString(), "Form"));
                 }
             }
 
@@ -139,7 +139,7 @@ namespace Core.ImListening.Services
             var query = request.Query;
             foreach (var (key, value) in query)
             {
-                requestInfo.Add(new RequestInfo(history.Id,  key, value.ToString(), "Query"));
+                requestInfo.Add(new RequestInfo(history.Id, key, value.ToString(), "Query"));
             }
 
             // Add cookies
@@ -150,13 +150,13 @@ namespace Core.ImListening.Services
 
             // Read and add request body
             var requestBody = await ReadRequestBodyAsync(request);
-            requestInfo.Add(new RequestInfo(history.Id,  "RequestBody", requestBody, "Body"));
+            requestInfo.Add(new RequestInfo(history.Id, "RequestBody", requestBody, "Body"));
 
             // Add route data
             var routeData = controllerContext.RouteData;
             foreach (var (key, value) in routeData.Values)
             {
-                requestInfo.Add(new RequestInfo(history.Id,  key, value?.ToString(), "RouteData"));
+                requestInfo.Add(new RequestInfo(history.Id, key, value?.ToString(), "RouteData"));
             }
             return requestInfo;
         }
@@ -220,6 +220,22 @@ namespace Core.ImListening.Services
             }
             return (ips, hostName, aliases);
         }
+         
+        public async Task SendLoadTestResultAsync(string userId, List<object> data)
+        {
+            await _chatHub.Clients.All.SendAsync(userId + "|load-test-result", data);
+        }
 
+        //public async Task<List<string>> GetAllActiveUser()
+        //{
+        //    var users = new List<string>();
+        //    var clients = _chatHub.Clients.;
+        //    var user = await clients..ToListAsync();
+        //    foreach (var item in user)
+        //    {
+        //        users.Add(item);
+        //    }
+        //    return users;
+        //}
     }
 }

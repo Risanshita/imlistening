@@ -20,12 +20,13 @@ namespace Core.ImListening.Services
             return _repository.CreateAsync(new Webhook
             {
                 ContentType = request.ContentType,
-                ExpireOnUtc = DateTime.UtcNow.AddMinutes(request.ExpireAfterMin),
+                ExpireOnUtc = request.IsLoadTesting ? DateTime.UtcNow.AddDays(7) : DateTime.UtcNow.AddMinutes(request.ExpireAfterMin),
                 Id = string.IsNullOrWhiteSpace(request.Path) ? Guid.NewGuid().ToString() : request.Path,
                 Response = request.Response,
                 StatusCode = request.StatusCode,
                 Timeout = request.Timeout,
                 UserId = userId,
+                IsLoadTesting = request.IsLoadTesting,
                 ForwardTo = request.ForwardTo,
             });
         }

@@ -1,5 +1,3 @@
-
-using Amazon.Runtime.Internal.Util;
 using Common.ImListening.DbContexts;
 using Common.ImListening.Repositories.InMemoryDb;
 using Common.ImListening.Repositories.MongoDb;
@@ -7,15 +5,18 @@ using Core.ImListening;
 using Core.ImListening.DbModels;
 using Core.ImListening.Services;
 using Core.ImListening.Services.Interfaces;
+using ImListening.Controllers;
 using ImListening.Handlers;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualBasic;
+using MongoDB.Driver.Core.Operations;
 using NSwag;
 using NSwag.Generation.Processors.Security;
 
 namespace ImListening
 {
-  public static class Program
+    public static class Program
     {
         public static void Main(string[] args)
         {
@@ -63,7 +64,6 @@ namespace ImListening
             builder.Services.AddSingleton(typeof(MongoDbContext<>));
             builder.Services.Configure<MongoDbConfigs>(builder.Configuration.GetSection(MongoDbConfigs.Option));
             builder.Services.AddTransient(typeof(IMongoDbRepository<>), typeof(MongoDbRepository<>));
-
 
             // Business Services
             builder.Services.AddServices();
@@ -120,6 +120,7 @@ namespace ImListening
             app.MapHub<ChatHub>("/chatHub");
 
             CreateDbIfNotExists(app);
+            StartJobs(app);
             app.Run();
         }
         private static void CreateDbIfNotExists(IHost host)
@@ -143,7 +144,57 @@ namespace ImListening
 
         public static void Initialize(IUserService userService)
         {
-            userService.CreateUserAsync(new Core.ImListening.ApiModels.UserRequest { Username = "RISHI", Password = "KUMAR"}).Wait();
+            userService.CreateUserAsync(new Core.ImListening.ApiModels.UserRequest { Username = "RISHI", Password = "KUMAR" }).Wait();
+        }
+
+        public static void StartJobs(IHost host)
+        {
+            using var scope = host.Services.CreateScope();
+            var services = scope.ServiceProvider;
+            try
+            {
+                var listenerService = services.GetRequiredService<IListenerService>();
+                var logger = services.GetRequiredService<ILogger<ListenerService>>();
+                PollLoadTest(listenerService, logger);
+            }
+            catch (Exception ex)
+            {
+                var logger = services.GetRequiredService<ILogger<ListenerService>>();
+                logger.LogError(ex, "An error occurred registering job.");
+            }
+        }
+
+        public static void PollLoadTest(IListenerService listenerService, ILogger logger)
+        {
+            Task.Run(async () =>
+            {
+                while (true)
+                {
+                    await Task.Delay(1000);
+                    try
+                    {
+                        var users = ListenController.LoadTestingUrls.Values.Distinct().ToList();
+                        foreach (var user in users)
+                        {
+                            var paths = ListenController.LoadTestingUrls.Where(a => a.Value == user).Select(a => a.Key).ToList();
+                            List<object> ls = new ();
+                            ListenController.LoadTestingHitCount.Where(a => paths.Contains(a.Key)).ToList().ForEach(a =>
+                            {
+                                ls.Add(new { Path = a.Key, HitCount = a.Value, Time = DateTime.UtcNow });
+                            });
+
+                            if (ls.Any())
+                            {
+                                await listenerService.SendLoadTestResultAsync(user, ls);
+                            }
+                        } 
+                    }
+                    catch (Exception ex)
+                    {
+                        logger.LogError(ex, "An error occurred while polling load test.");
+                    }
+                }
+            });
         }
     }
 }
