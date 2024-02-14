@@ -10,9 +10,13 @@
   
 }
 
-.ant-modal-content{
-  border-right: 20px solid blue !important;
-  transition: 0.3s;
+.idBox{
+    display:flex;
+       justify-content:space-between;
+}
+.ant-modal-content {
+    border-right: 20px solid blue !important;
+    transition: 0.3s;
 }
 .ant-modal-content:hover{
   border-right: 40px solid blue !important;
