@@ -1,6 +1,7 @@
 import { Counter } from "./components/Counter";
 import Home from "./components/Home";
 import Login from "./components/Login";
+import LoadGraph from "./components/loadGraph/LoadGraph";
 import Users from "./components/users/Users";
 import Urls from "./components/webhook/Urls";
 
@@ -25,6 +26,10 @@ const AppRoutes = [
   {
     path: '/users',
     element: <Users />
+  },
+  {
+    path: '/loadGraph',
+    element: <LoadGraph />
   },
   // {
   //   path: '/diagnostics',

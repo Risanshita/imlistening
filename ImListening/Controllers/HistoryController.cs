@@ -34,7 +34,7 @@ namespace ImListening.Controllers
                 return Ok(paths.Select(a =>
                 {
                     var hasCount = ListenController.LoadTestingHitCount.TryGetValue(a, out int count);
-                    return new { Path = a, HitCount = hasCount ? count : 0 };
+                    return new { Path = a, HitCount = hasCount ? count : 0, Time = DateTime.UtcNow };
                 }).ToList());
             }
             return NotFound();

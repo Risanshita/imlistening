@@ -55,7 +55,10 @@ namespace ImListening.Controllers
                 }
                 ListenController.LoadTestingUrls.Where(a => a.Value == UserId)
                     .ToList()
-                    .ForEach(a => ListenController.LoadTestingUrls.TryRemove(a.Key, out _));
+                    .ForEach(a => { 
+                        ListenController.LoadTestingUrls.TryRemove(a.Key, out _);
+                        ListenController.LoadTestingHitCount.TryRemove(a.Key, out _);
+                    });
 
                 foreach (var path in request.Paths)
                 {
