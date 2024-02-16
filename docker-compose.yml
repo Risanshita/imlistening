@@ -16,6 +16,7 @@ services:
       ASPNETCORE_HTTPS_PORT: 443
     ports:
       - '8081:44428'
+      - '8082:443'
     depends_on:
       - mongodb
 

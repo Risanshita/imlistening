@@ -2,6 +2,7 @@
 using Core.ImListening.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Concurrent;
 
 namespace ImListening.Controllers
 {
@@ -11,6 +12,8 @@ namespace ImListening.Controllers
     {
         private readonly IWebhookService _webhookService;
         private readonly IListenerService _listenerService;
+        public static readonly ConcurrentDictionary<string, int> LoadTestingHitCount = new();
+        public static readonly ConcurrentDictionary<string, string> LoadTestingUrls = new(); // path, UserId
 
         public ListenController(IWebhookService webhookService, IListenerService listenerService)
         {
@@ -36,9 +39,18 @@ namespace ImListening.Controllers
         [AcceptVerbs("MOVE")]
         [AcceptVerbs("LOCK")]
         [AcceptVerbs("UNLOCK")]
-        public Task<IActionResult> Listen([FromRoute] string path)
+        public async Task<IActionResult> Listen([FromRoute] string path)
         {
-            return GetResponse(path);
+            if (LoadTestingUrls.TryGetValue(path, out string userId))
+            {
+                // 
+                LoadTestingHitCount["path"] = LoadTestingHitCount["path"] + 1;
+                return Ok();
+            }
+            else
+            {
+                return await GetResponse(path);
+            }
         }
 
         private async Task<IActionResult> GetResponse(string path)
