@@ -1,15 +1,16 @@
 ﻿using Common.ImListening.Repositories.InMemoryDb;
+using Common.ImListening.Repositories.MongoDb;
 using Core.ImListening.ApiModels;
 using Core.ImListening.DbModels;
 using Core.ImListening.Services.Interfaces;
 
 namespace Core.ImListening.Services
 {
-    public class WebhookService : IWebhookService
+  public class WebhookService : IWebhookService
     {
-        private readonly IRepository<Webhook> _repository;
+        private readonly IMongoDbRepository<Webhook> _repository;
 
-        public WebhookService(IRepository<Webhook> genericRepository)
+        public WebhookService(IMongoDbRepository<Webhook> genericRepository)
         {
             _repository = genericRepository;
         }
@@ -31,7 +32,7 @@ namespace Core.ImListening.Services
 
         public Task DeleteWebhookAsync(Webhook webhook)
         {
-            return _repository.DeleteAsync(webhook);
+            return _repository.DeleteAsync(webhook,webhook.Id);
         }
 
         public async Task<Webhook?> GetWebhookByIdAsync(string id)
@@ -55,7 +56,7 @@ namespace Core.ImListening.Services
             webhook.Timeout = request.Timeout;
             webhook.ForwardTo = request.ForwardTo;
 
-            return _repository.UpdateAsync(webhook);
+            return _repository.UpdateAsync(webhook,webhook.Id);
         }
     }
 }

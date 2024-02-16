@@ -2,7 +2,8 @@ version: '3.4'
 
 services:
   imlistening:
-    image: ${DOCKER_REGISTRY-}imlistening
+    image: imlistening
+    container_name: imlistening
     build:
       context: .
       dockerfile: ImListening/Dockerfile
@@ -11,12 +12,17 @@ services:
     environment:
       ASPNETCORE_ENVIRONMENT: Production
       ASPNETCORE_HOSTINGSTARTUPASSEMBLIES: Microsoft.AspNetCore.SpaProxy
+      ASPNETCORE_URLS: https://+
+      ASPNETCORE_HTTPS_PORT: 443
     ports:
-      - '8081:80'
-      - '443:443'
+      - '8081:44428'
+      - '8082:443'
+    depends_on:
+      - mongodb
 
   mongodb:
-    image: mongodb/mongodb-atlas-kubernetes-operator:v1.5.0
+    image: mongo:latest
+    container_name: imlisteningmongo
     ports:
       - '27019:27017'
     networks:

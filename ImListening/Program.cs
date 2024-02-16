@@ -1,8 +1,12 @@
 
+using Amazon.Runtime.Internal.Util;
+using Common.ImListening.DbContexts;
 using Common.ImListening.Repositories.InMemoryDb;
+using Common.ImListening.Repositories.MongoDb;
 using Core.ImListening;
 using Core.ImListening.DbModels;
 using Core.ImListening.Services;
+using Core.ImListening.Services.Interfaces;
 using ImListening.Handlers;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.EntityFrameworkCore;
@@ -11,7 +15,7 @@ using NSwag.Generation.Processors.Security;
 
 namespace ImListening
 {
-    public static class Program
+  public static class Program
     {
         public static void Main(string[] args)
         {
@@ -56,25 +60,10 @@ namespace ImListening
                 });
             });
 
-            builder.Services.AddDbContext<InMemoryDbContext>(options =>
-            {
-                var dbType = builder.Configuration.GetValue<string>("DbType");
-                if (dbType == "SqlServer")
-                {
+            builder.Services.AddSingleton(typeof(MongoDbContext<>));
+            builder.Services.Configure<MongoDbConfigs>(builder.Configuration.GetSection(MongoDbConfigs.Option));
+            builder.Services.AddTransient(typeof(IMongoDbRepository<>), typeof(MongoDbRepository<>));
 
-                    var connectionString = builder.Configuration.GetConnectionString("SqlServer");
-                    options.UseSqlServer(connectionString);
-                }
-                else if (dbType == "InMemory")
-                {
-                    options.UseInMemoryDatabase("ImListeningDb");
-                }
-                else
-                {
-                    throw new InvalidOperationException("Invalid db type value. supported value is InMemory and SqlServer");
-                }
-            });
-            _ = builder.Services.AddTransient<DbContext>((a) => a.GetService<InMemoryDbContext>());
 
             // Business Services
             builder.Services.AddServices();
@@ -140,8 +129,8 @@ namespace ImListening
                 var services = scope.ServiceProvider;
                 try
                 {
-                    var context = services.GetRequiredService<InMemoryDbContext>();
-                    Initialize(context);
+                    var userService = services.GetRequiredService<IUserService>();
+                    Initialize(userService);
                 }
                 catch (Exception ex)
                 {
@@ -152,32 +141,9 @@ namespace ImListening
 
         }
 
-        public static void Initialize(InMemoryDbContext context)
+        public static void Initialize(IUserService userService)
         {
-            context.Database.EnsureCreated();
-
-            // Look for any students.
-            if (context.Users.Any())
-            {
-                return;   // DB has been seeded
-            }
-            var adminUser = new User
-            {
-                Description = "THIS IS ADMIN USER",
-                Id = "RISHI",
-                Password = "KUMAR",
-                Role = "Admin"
-            };
-
-            context.Users.Add(adminUser);
-            context.Webhook.Add(new Webhook
-            {
-                Id = "rishi",
-                StatusCode = 200,
-                UserId = adminUser.Id
-            });
-
-            context.SaveChanges();
+            userService.CreateUserAsync(new Core.ImListening.ApiModels.UserRequest { Username = "RISHI", Password = "KUMAR"}).Wait();
         }
     }
 }
