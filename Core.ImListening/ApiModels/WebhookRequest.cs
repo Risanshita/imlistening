@@ -17,5 +17,6 @@ namespace Core.ImListening.ApiModels
         public string? ForwardTo { get; set; }
         public string? ContentType { get; set; } = "text/plain";
         public string? Response { get; set; }
+        public bool IsLoadTesting { get; set; }
     }
 }

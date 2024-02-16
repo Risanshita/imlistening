@@ -36,10 +36,67 @@ namespace ImListening.Controllers
             return Ok(webhook);
         }
 
+        [HttpPost("load-test")]
+        public async Task<ActionResult> CreateLoadTestingGroup([FromBody] CreateLoadTestGroupRequest request)
+        {
+            if (request.Paths != null && request.Paths.Any())
+            {
+                foreach (var path in request.Paths)
+                {
+                    var webhook = await _webhookService.GetWebhookByIdAsync(path);
+                    if (webhook == null || !webhook.IsLoadTesting)
+                    {
+                        return BadRequest($"Url not found or not support load test: {path}.");
+                    }
+                    if (webhook.UserId != UserId)
+                    {
+                        return Unauthorized();
+                    }
+                }
+                ListenController.LoadTestingUrls.Where(a => a.Value == UserId)
+                    .ToList()
+                    .ForEach(a => { 
+                        ListenController.LoadTestingUrls.TryRemove(a.Key, out _);
+                        ListenController.LoadTestingHitCount.TryRemove(a.Key, out _);
+                    });
+
+                foreach (var path in request.Paths)
+                {
+                    ListenController.LoadTestingUrls.TryAdd(path, UserId);
+                    ListenController.LoadTestingHitCount.TryAdd(path, 0);
+                }
+                return new ObjectResult("Load testing group created!") { StatusCode = (int)HttpStatusCode.Created };
+            }
+            else
+            {
+                return BadRequest("Paths are required.");
+            }
+        }
+
+        [HttpDelete("load-test")]
+        public ActionResult DeleteLoadTestingGroup()
+        {
+            ListenController.LoadTestingUrls.Where(a => a.Value == UserId)
+                .ToList()
+                .ForEach(a => ListenController.LoadTestingUrls.TryRemove(a.Key, out _));
+            return Ok();
+        }
+
+        [HttpGet("load-test")]
+        public ActionResult GetLoadTestingGroup()
+        {
+            var paths = ListenController.LoadTestingUrls.Where(a => a.Value == UserId).Select(a => a.Key).ToList();
+            if (paths.Any())
+            {
+                return Ok(paths);
+            }
+            return NotFound();
+        }
+
         [HttpPost]
         public async Task<ActionResult> CreateWebhook([FromBody] WebhookRequest request)
         {
-            ListenController.LoadTestingUrls.TryAdd("","");
+
             var webhook = await _webhookService.GetWebhookByIdAsync(request.Path);
             if (webhook == null)
             {

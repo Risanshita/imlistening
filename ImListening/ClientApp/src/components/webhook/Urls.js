@@ -1,4 +1,5 @@
 import {
+  Checkbox,
   Button,
   Card,
   List,
@@ -7,6 +8,7 @@ import {
   Input,
   Col,
   Space,
+  Modal,
   message,
   Divider,
 } from "antd";
@@ -47,7 +49,7 @@ const response = JSON.parse(`{
     "failedCount": 0
   }`);
 const Urls = () => {
-   const languageMap = {
+  const languageMap = {
     "text/css": "css",
     "text/csv": "csv",
     "text/html": "html",
@@ -59,11 +61,23 @@ const Urls = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [open, setOpen] = useState(false);
   const [selectedRecord, setSelectedRecord] = useState({});
+  const [loadGroups, setLoadGroups] = useState({});
   const [messageApi, contextHolder] = message.useMessage();
-
+  const [selectedUrls, setSelectedUrls] = useState([]);
+  const [isLoadGroupPresent, setIsLoadGroupPresent] = useState(false);
+  const [isWarningModalOpen, setIsWarningModalOpen] = useState(false);
   useEffect(() => {
     fetchData();
+    fetchLoadGroup();
   }, []);
+
+  const showWarinigModal = () => {
+    setIsWarningModalOpen(true);
+  };
+
+  const handleCancel = () => {
+    setIsWarningModalOpen(false);
+  };
 
   const fetchData = async (path) => {
     setIsLoading(true);
@@ -87,6 +101,50 @@ const Urls = () => {
     setIsLoading(false);
   };
 
+  const fetchLoadGroup = async () => {
+    const response = await fetch("api/webhooks/load-test", {
+      headers: authHeader(),
+    });
+    const responseData = await response.json();
+    console.log(responseData);
+    if (responseData.length > 0) {
+      // setIsLoadGroupPresent(true);
+      // setLoadGroups(responseData.data);
+      return true;
+    } else {
+      // setIsLoadGroupPresent(false);
+      return false;
+    }
+  };
+
+  const createLoadGroup = async (forceCreate) => {
+    if (!forceCreate) {
+      const isGroupExist = await fetchLoadGroup();
+      if (isGroupExist) {
+        setIsLoadGroupPresent(true);
+        setIsWarningModalOpen(true);
+        return;
+      }
+    }
+
+    const paths = { paths: selectedUrls };
+    const response = await fetch("api/webhooks/load-test", {
+      body: JSON.stringify(paths),
+      method: "POST",
+      headers: authHeader({
+        "Content-Type": "application/json",
+      }),
+    });
+    console.log(response);
+
+    //console.log(responseData);
+    if (response.status == 201) {
+      setIsLoadGroupPresent(true);
+    }
+    setIsLoadGroupPresent(false);
+    setIsWarningModalOpen(false);
+    //setSelectedUrls([]);
+  };
   const handleEdit = async (rec) => {
     setOpen(true);
     setSelectedRecord(rec);
@@ -151,12 +209,52 @@ const Urls = () => {
   <h4 className="lable">
     Expire on : <span className="boldLable">200</span>
   </h4>`;
+
+  const handleLoadTesting = (e, path) => {
+    const isChecked = e.target.checked;
+    setSelectedUrls((prevSelectedUrls) => {
+      if (isChecked) {
+        return [...prevSelectedUrls, path];
+      } else {
+        return prevSelectedUrls.filter((url) => url !== path);
+      }
+    });
+
+    console.log(selectedUrls.length);
+  };
+
   return (
     <div>
       {contextHolder}
       <Row justify={"space-between"}>
         <h2 className="urlHeading">Manage Url</h2>
         <Row className="rightBox" style={{ paddingBottom: 10 }}>
+          {selectedUrls.length > 0 ? (
+            <Button
+              type="primary"
+              className="btn"
+              onClick={() => createLoadGroup()}
+            >
+              Create Load Group
+            </Button>
+          ) : null}
+
+          {/* {isLoadGroupPresent ? (
+            <Button type="primary" className="btn" onClick={fetchLoadGroup}>
+              Show Graph
+            </Button>
+          ) : null} */}
+          <Modal
+            title="Warning!"
+            open={isWarningModalOpen}
+            onOk={() => createLoadGroup(true)}
+            onCancel={handleCancel}
+          >
+            <p>
+              If you create a new test group, the previous group will be
+              permanently deleted, and this action cannot be undone.
+            </p>
+          </Modal>
           <Search
             placeholder="Url path"
             allowClear
@@ -164,22 +262,34 @@ const Urls = () => {
             style={{ paddingLeft: 10, width: 300 }}
             maxLength={50}
           />
+
           <Button type="primary" className="btn" onClick={showModal}>
             New Url <LinkOutlined />
           </Button>
         </Row>
       </Row>
 
-
       {data == null || data.length == 0 ? (
-        <Row justify={"center"} align={"middle"} style={{height:"77vh"}}>
+        <Row justify={"center"} align={"middle"} style={{ height: "77vh" }}>
           <img src={notUrlFound} width="200px" />
         </Row>
       ) : (
         <Row justify={"start"} style={{ gap: "10px" }}>
           {data.map((e) => (
             <Col xs={24} sm={24} md={11} lg={7} className="urlBox" key={e.id}>
-              <h3 className="Urltitle">{e.id}</h3>
+              <div className="idBox">
+                <div className="Urltitle">{e.id}</div>
+
+                {/*<Button onClick={()=>{ handleLoadTesting(e) }}>CLick</Button>*/}
+                {e.isLoadTesting ? (
+                  <Checkbox
+                    disabled={
+                      !selectedUrls.includes(e.id) && selectedUrls.length === 5
+                    }
+                    onChange={(event) => handleLoadTesting(event, e.id)}
+                  />
+                ) : null}
+              </div>
               <h4 className="Urllable">
                 Status Code :{" "}
                 <span

@@ -41,20 +41,16 @@ namespace ImListening.Controllers
         [AcceptVerbs("UNLOCK")]
         public async Task<IActionResult> Listen([FromRoute] string path)
         {
-            if (LoadTestingUrls.TryGetValue(path, out string userId))
-            {
-                // 
-                LoadTestingHitCount["path"] = LoadTestingHitCount["path"] + 1;
-                return Ok();
-            }
-            else
-            {
-                return await GetResponse(path);
-            }
+            return await GetResponse(path);
         }
 
         private async Task<IActionResult> GetResponse(string path)
         {
+            if (LoadTestingUrls.ContainsKey(path))
+            {
+                LoadTestingHitCount[path] = LoadTestingHitCount[path] + 1;
+                return Ok();
+            }
             var webhook = await _webhookService.GetWebhookByIdAsync(path);
             if (webhook == null)
             {
@@ -64,7 +60,7 @@ namespace ImListening.Controllers
             return await GenerateResponse(webhook);
 
         }
-
+        
         private async Task<IActionResult> GenerateResponse(Webhook webhook)
         {
             var response = new ContentResult
