@@ -5,6 +5,7 @@ namespace Core.ImListening.Services.Interfaces
 {
     public interface IWebhookService
     {
+        Task CreatIndexAsync();
         Task CreateWebhookAsync(WebhookRequest request, string userId);
         Task DeleteWebhookAsync(Webhook webhook);
         Task<Webhook?> GetWebhookByIdAsync(string id);

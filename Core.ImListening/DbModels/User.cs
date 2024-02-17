@@ -1,8 +1,12 @@
-﻿namespace Core.ImListening.DbModels
+﻿using MongoDB.Bson.Serialization.Attributes;
+using MongoDB.Bson;
+
+namespace Core.ImListening.DbModels
 {
     public class User
     {
-        public string Id { get; set; } = Guid.NewGuid().ToString();
+        [BsonId]
+        public string Id { get; set; }
         public DateTime? ExpireOnUtc { get; set; }
         public string? Description { get; set; }
         public string? Role { get; set; } = "User";

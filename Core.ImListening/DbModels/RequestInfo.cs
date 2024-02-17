@@ -1,5 +1,4 @@
-﻿using Newtonsoft.Json;
-
+﻿
 namespace Core.ImListening.DbModels
 {
     public class RequestInfo

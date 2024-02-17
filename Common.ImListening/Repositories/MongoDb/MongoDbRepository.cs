@@ -16,6 +16,12 @@ namespace Common.ImListening.Repositories.MongoDb
             _collection = mongoDbContext.Collection;
 
         }
+
+        public async Task CreatIndexAsync(CreateIndexModel<T> indexModel)
+        {
+            await _collection.Indexes.CreateOneAsync(indexModel);
+        }
+
         public Task AddRangeAsync(IEnumerable<T> items)
         {
             throw new NotImplementedException();
@@ -25,11 +31,6 @@ namespace Common.ImListening.Repositories.MongoDb
         {
             //SetidAndExpiry(id, value, expiry);
             await _collection.InsertOneAsync(value);
-        }
-        private void SetidAndExpiry(string id, T value, TimeSpan? expiry = null)
-        {
-            value.SetPropertyIfExists("Id", id);
-            value.SetPropertyIfExists<T, DateTime?>("ExpireOnUtc", expiry == null ? null : DateTime.UtcNow.Add((TimeSpan)expiry));
         }
         public async Task CreateAsync(T item)
         {
