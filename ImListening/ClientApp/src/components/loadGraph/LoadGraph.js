@@ -1,61 +1,87 @@
-﻿import * as echarts from "echarts";
-import { useEffect, useState } from "react";
+﻿import { useEffect, useState } from "react";
 import "./LoadGraphStyle.css";
 import { authHeader, getUserId } from "../../Util";
 import { HubConnectionBuilder } from "@microsoft/signalr";
 import ApexCharts from "apexcharts";
 var seriesList = [];
+var XAXISRANGE = 2000;
+var MAX_XAXISRANGE = 3600000;
+var options = {
+  chart: {
+    id: "realtime",
+    height: 700,
+    width: 1000,
+    type: "line",
+    animations: {
+      enabled: true,
+      easing: "linear",
+      dynamicAnimation: {
+        speed: 1000,
+      },
+    },
+    toolbar: {
+      show: true,
+    },
+    zoom: {
+      enabled: false,
+    },
+  },
+  dataLabels: {
+    enabled: false,
+  },
+  stroke: {
+    curve: "smooth",
+  },
+  title: {
+    text: "Hit counts",
+    align: "left",
+  },
+  markers: {
+    size: 0,
+  },
+  xaxis: {
+    type: "datetime",
+    range: XAXISRANGE,
+    labels: {
+      show: true,
+      // datetimeFormatter: {
+      //   hour: "HH:mm",
+      // },
+      formatter: function (value, timestamp, opts) {
+        return (
+          new Date(value).getHours() +
+          ":" +
+          new Date(value).getMinutes() +
+          ":" +
+          new Date(value).getSeconds()
+        );
+
+        // return opts.dateFormatter(new Date(timestamp)).format("dd MMM")
+      },
+    },
+    tooltip: {
+      formatter: function (val, opts) {
+        return (
+          new Date(val).getHours() +
+          ":" +
+          new Date(val).getMinutes() +
+          ":" +
+          new Date(val).getSeconds()
+        );
+      },
+    },
+  },
+  yaxis: {
+    // max: 100,
+  },
+  legend: {
+    show: true,
+  },
+};
 function onlyUnique(value, index, array) {
   return array.indexOf(value) === index;
 }
-var chart;
-let XAXISRANGE = 600000;
 const LoadGraph = () => {
-  const options = {
-    chart: {
-      id: "realtime",
-      height: 700,
-      width: 1000,
-      type: "line",
-      animations: {
-        enabled: true,
-        easing: "linear",
-        dynamicAnimation: {
-          speed: 1000,
-        },
-      },
-      toolbar: {
-        show: true,
-      },
-      zoom: {
-        enabled: false,
-      },
-    },
-    dataLabels: {
-      enabled: false,
-    },
-    stroke: {
-      curve: "smooth",
-    },
-    title: {
-      text: "Dynamic Updating Chart",
-      align: "left",
-    },
-    markers: {
-      size: 0,
-    },
-    xaxis: {
-      type: "datetime",
-      range: XAXISRANGE,
-    },
-    yaxis: {
-      // max: 100,
-    },
-    legend: {
-      show: true,
-    },
-  };
-
   const [isNoDataAvailable, setIsNoDataAvailable] = useState(true);
 
   const initChart = async () => {
@@ -82,7 +108,7 @@ const LoadGraph = () => {
 
     var op = { ...options, series: seriesList };
     console.log(op);
-    chart = new ApexCharts(document.querySelector("#chart"), op);
+    var chart = new ApexCharts(document.querySelector("#chart"), op);
 
     chart.render();
     await fetchLoadCount();
@@ -124,6 +150,9 @@ const LoadGraph = () => {
               var se = [];
               message.forEach((a) => {
                 var s = seriesList.find((b) => b.name === a.path);
+                if (s.data.length >= MAX_XAXISRANGE / 1000) {
+                  s.data.shift();
+                }
                 s.data.push({
                   x: getTime(a.time),
                   y: a.hitCount,
@@ -132,11 +161,19 @@ const LoadGraph = () => {
               });
               seriesList = se;
               ApexCharts.exec("realtime", "updateSeries", se);
+              updateRange();
             } catch (error) {}
           });
         }
       })
       .catch((e) => console.log("Connection failed: ", e));
+  };
+
+  const updateRange = () => {
+    if (options.xaxis.range < MAX_XAXISRANGE) {
+      options.xaxis.range += 1000;
+      ApexCharts.exec("realtime", "updateOptions", options);
+    }
   };
   return (
     <>
