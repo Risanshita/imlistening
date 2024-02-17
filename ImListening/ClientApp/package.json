@@ -9,6 +9,7 @@
     "@monaco-editor/react": "^4.5.1",
     "@uiw/react-codemirror": "^4.21.8",
     "antd": "5.6.2",
+    "apexcharts": "^3.45.2",
     "bootstrap": "5.2.3",
     "chart.js": "4.3.0",
     "echarts": "^5.4.3",

@@ -3,126 +3,99 @@ import { useEffect, useState } from "react";
 import "./LoadGraphStyle.css";
 import { authHeader, getUserId } from "../../Util";
 import { HubConnectionBuilder } from "@microsoft/signalr";
+import ApexCharts from "apexcharts";
+var seriesList = [];
 function onlyUnique(value, index, array) {
   return array.indexOf(value) === index;
 }
+var chart;
+let XAXISRANGE = 600000;
 const LoadGraph = () => {
-  const [sourceData, setSourceData] = useState([
-    { time: 0, path: "", hitCount: 0 },
-  ]);
+  const options = {
+    chart: {
+      id: "realtime",
+      height: 700,
+      width: 1000,
+      type: "line",
+      animations: {
+        enabled: true,
+        easing: "linear",
+        dynamicAnimation: {
+          speed: 1000,
+        },
+      },
+      toolbar: {
+        show: true,
+      },
+      zoom: {
+        enabled: false,
+      },
+    },
+    dataLabels: {
+      enabled: false,
+    },
+    stroke: {
+      curve: "smooth",
+    },
+    title: {
+      text: "Dynamic Updating Chart",
+      align: "left",
+    },
+    markers: {
+      size: 0,
+    },
+    xaxis: {
+      type: "datetime",
+      range: XAXISRANGE,
+    },
+    yaxis: {
+      // max: 100,
+    },
+    legend: {
+      show: true,
+    },
+  };
+
   const [isNoDataAvailable, setIsNoDataAvailable] = useState(true);
-  let chartDom;
-  let myChart;
 
-  // var dummyDatat = [
-  //   {time : 0, path : "NewsPage", hitCount : 2},
-  //   {time : 3, path : "NewsPage", hitCount : 12},
-  //   {time : 5, path : "NewsPage", hitCount : 32},
-  //   {time : 9, path : "NewsPage", hitCount : 54},
-  // ]
-  const initEChartsGraph = async (_rawData) => {
-    var initData = _rawData || sourceData;
-    if (!_rawData) {
-      initData = await getAllPaths();
-      if (!(Array.isArray(initData) && initData.length > 0)) {
-        setIsNoDataAvailable(true);
-        return;
-      }
-      setIsNoDataAvailable(false);
-      setSourceData(initData);
+  const initChart = async () => {
+    var allPaths = await getAllPaths();
+    if (!(Array.isArray(allPaths) && allPaths.length > 0)) {
+      setIsNoDataAvailable(true);
+      return;
     }
+    setIsNoDataAvailable(false);
 
-    const paths = initData.map((e) => e.path).filter(onlyUnique); // Add 'NewsPage'
+    const paths = allPaths.map((e) => e.path).filter(onlyUnique); // Add 'NewsPage'
     // const paths = ["NewsPage"];
     console.log(paths);
-    const datasetWithFilters = [];
-    const seriesList = [];
-
-    echarts.util.each(paths, function (path) {
-      var datasetId = "dataset_" + path;
-      datasetWithFilters.push({
-        id: datasetId,
-        fromDatasetId: "dataset_raw",
-        transform: {
-          type: "filter",
-          config: {
-            and: [
-              { dimension: "time", gte: 0 },
-              { dimension: "path", "=": path },
-            ],
-          },
-        },
-      });
-      seriesList.push({
-        type: "line",
-        datasetId: datasetId,
-        showSymbol: true,
-        name: path,
-        endLabel: {
-          show: true,
-          formatter: function (params) {
-            return params.seriesName + ": " + params.data.hitCount;
-          },
-        },
-        labelLayout: {
-          moveOverlap: "shiftY",
-        },
-        emphasis: {
-          focus: "series",
-        },
-        encode: {
-          x: "time",
-          y: "hitCount",
-          label: ["path", "hitCount"],
-          itemName: "time",
-          tooltip: ["hitCount"],
-        },
-      });
-    });
-
-    const option = {
-      animationDuration: 10000,
-      dataset: [
+    seriesList = allPaths.map((a) => ({
+      data: [
         {
-          id: "dataset_raw",
-          source: initData,
+          x: getTime(a.time),
+          y: a.hitCount,
         },
-        ...datasetWithFilters,
       ],
-      title: {
-        text: "Url Load Graph is Here",
-      },
-      tooltip: {
-        order: "valueDesc",
-        trigger: "axis",
-      },
-      // xAxis: {
-      //   type: 'category',
-      //   nameLocation: 'middle',
-      // },
-      yAxis: {
-        name: "hitCount",
-      },
-      xAxis: {
-        name: "time",
-      },
-      grid: {
-        right: 140,
-      },
-      series: seriesList,
-    };
+      name: a.path,
+      type: "line",
+    }));
 
-    myChart.setOption(option);
+    var op = { ...options, series: seriesList };
+    console.log(op);
+    chart = new ApexCharts(document.querySelector("#chart"), op);
+
+    chart.render();
+    await fetchLoadCount();
   };
 
   // Call the function when the component mounts
-  useEffect(async () => {
-    chartDom = document.getElementById("main");
-    myChart = echarts.init(chartDom);
-    await initEChartsGraph();
-    await fetchLoadCount();
+  useEffect(() => {
+    initChart();
   }, []);
 
+  const getTime = (time) => {
+    return new Date(time).getTime();
+  };
   const getAllPaths = async () => {
     const response = await fetch("history/load-test", {
       headers: authHeader(),
@@ -148,18 +121,17 @@ const LoadGraph = () => {
         if (userId) {
           connection.on(userId + "|load-test-result", async (message) => {
             try {
-              var option = myChart.getOption();
-              var ls = [...option.dataset[0].source, ...message];
-              console.log(ls);
-              setSourceData([...ls]);
-              // initEChartsGraph(ls);
-              option.dataset[0].source = ls;
-              myChart.setOption(option);
-              myChart.appendData({
-                seriesIndex: 0,
-                data: ls,
+              var se = [];
+              message.forEach((a) => {
+                var s = seriesList.find((b) => b.name === a.path);
+                s.data.push({
+                  x: getTime(a.time),
+                  y: a.hitCount,
+                });
+                se.push(s);
               });
-              console.log(ls);
+              seriesList = se;
+              ApexCharts.exec("realtime", "updateSeries", se);
             } catch (error) {}
           });
         }
@@ -169,7 +141,7 @@ const LoadGraph = () => {
   return (
     <>
       <div className="container" style={{ width: "100%" }}>
-        <div id="main" style={{ width: "100%", height: "500px" }}></div>
+        <div id="chart" style={{ width: "600px", height: "500px" }}></div>
       </div>
     </>
   );
