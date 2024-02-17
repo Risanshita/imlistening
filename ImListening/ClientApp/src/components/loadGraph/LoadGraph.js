@@ -3,6 +3,7 @@ import "./LoadGraphStyle.css";
 import { authHeader, getUserId } from "../../Util";
 import { HubConnectionBuilder } from "@microsoft/signalr";
 import ApexCharts from "apexcharts";
+import { Button } from "antd";
 var seriesList = [];
 var XAXISRANGE = 2000;
 var MAX_XAXISRANGE = 3600000;
@@ -78,6 +79,7 @@ var options = {
     show: true,
   },
 };
+var isPause = false;
 function onlyUnique(value, index, array) {
   return array.indexOf(value) === index;
 }
@@ -160,7 +162,7 @@ const LoadGraph = () => {
                 se.push(s);
               });
               seriesList = se;
-              ApexCharts.exec("realtime", "updateSeries", se);
+              if (!isPause) ApexCharts.exec("realtime", "updateSeries", se);
               updateRange();
             } catch (error) {}
           });
@@ -172,13 +174,22 @@ const LoadGraph = () => {
   const updateRange = () => {
     if (options.xaxis.range < MAX_XAXISRANGE) {
       options.xaxis.range += 1000;
-      ApexCharts.exec("realtime", "updateOptions", options);
+      if (!isPause) {
+        ApexCharts.exec("realtime", "updateOptions", options);
+      }
     }
   };
   return (
     <>
       <div className="container" style={{ width: "100%" }}>
         <div id="chart" style={{ width: "600px", height: "500px" }}></div>
+        <Button
+          onClick={() => {
+            isPause = !isPause;
+          }}
+        >
+          {isPause ? "Resume" : "Pause"}
+        </Button>
       </div>
     </>
   );
