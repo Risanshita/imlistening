@@ -80,6 +80,7 @@ var options = {
     show: true,
   },
 };
+var isPause = false;
 function onlyUnique(value, index, array) {
   return array.indexOf(value) === index;
 }
@@ -164,7 +165,7 @@ const LoadGraph = () => {
                 se.push(s);
               });
               seriesList = se;
-              ApexCharts.exec("realtime", "updateSeries", se);
+              if (!isPause) ApexCharts.exec("realtime", "updateSeries", se);
               updateRange();
             } catch (error) {}
           });
@@ -176,7 +177,9 @@ const LoadGraph = () => {
   const updateRange = () => {
     if (options.xaxis.range < MAX_XAXISRANGE) {
       options.xaxis.range += 1000;
-      ApexCharts.exec("realtime", "updateOptions", options);
+      if (!isPause) {
+        ApexCharts.exec("realtime", "updateOptions", options);
+      }
     }
   };
   return (
@@ -199,12 +202,19 @@ const LoadGraph = () => {
             />
           </div>
      
-        {/* <div className="graphLoad">
+        <div className="graphLoad">
           {isNoDataAvailable && <h1>No LoadGraphStyle Available</h1>}
           <Link to="/urls">
             <Button type="primary">Create Load Group</Button>
           </Link>
-        </div> */}
+        </div>
+        <Button
+          onClick={() => {
+            isPause = !isPause;
+          }}
+        >
+          {isPause ? "Resume" : "Pause"}
+        </Button>
       </div>
     </>
   );
