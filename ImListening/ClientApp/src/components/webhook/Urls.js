@@ -140,6 +140,7 @@ const Urls = () => {
     //console.log(responseData);
     if (response.status == 201) {
       setIsLoadGroupPresent(true);
+      setSelectedUrls([]);
     }
     setIsLoadGroupPresent(false);
     setIsWarningModalOpen(false);
@@ -223,6 +224,7 @@ const Urls = () => {
     console.log(selectedUrls.length);
   };
 
+
   return (
     <div>
       {contextHolder}
@@ -239,11 +241,9 @@ const Urls = () => {
             </Button>
           ) : null}
 
-          {/* {isLoadGroupPresent ? (
-            <Button type="primary" className="btn" onClick={fetchLoadGroup}>
-              Show Graph
-            </Button>
-          ) : null} */}
+    
+        
+          
           <Modal
             title="Warning!"
             open={isWarningModalOpen}
@@ -279,10 +279,12 @@ const Urls = () => {
             <Col xs={24} sm={24} md={11} lg={7} className="urlBox" key={e.id}>
               <div className="idBox">
                 <div className="Urltitle">{e.id}</div>
-
-                {/*<Button onClick={()=>{ handleLoadTesting(e) }}>CLick</Button>*/}
+                {/* <Button onClick={()=>{ handleLoadTesting(e) }}>CLick</Button> */}
                 {e.isLoadTesting ? (
                   <Checkbox
+                  // isChecked={selectedUrls.includes(e.id)}
+                  // value={true}
+                  checked={selectedUrls.includes(e.id)}
                     disabled={
                       !selectedUrls.includes(e.id) && selectedUrls.length === 5
                     }

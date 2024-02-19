@@ -6,6 +6,7 @@ import logo from './../assets/logo.png';
 import './NavMenu.css';
 import { logout } from '../Util';
 
+
 export class NavMenu extends Component {
   static displayName = NavMenu.name;
 

@@ -3,6 +3,8 @@ import "./LoadGraphStyle.css";
 import { authHeader, getUserId } from "../../Util";
 import { HubConnectionBuilder } from "@microsoft/signalr";
 import ApexCharts from "apexcharts";
+import { Button } from "antd";
+import { Link } from "react-router-dom";
 var seriesList = [];
 var XAXISRANGE = 2000;
 var MAX_XAXISRANGE = 3600000;
@@ -83,6 +85,7 @@ function onlyUnique(value, index, array) {
 }
 const LoadGraph = () => {
   const [isNoDataAvailable, setIsNoDataAvailable] = useState(true);
+
 
   const initChart = async () => {
     var allPaths = await getAllPaths();
@@ -178,10 +181,24 @@ const LoadGraph = () => {
   return (
     <>
       <div className="container" style={{ width: "100%" }}>
-        <div id="chart" style={{ width: "600px", height: "500px" }}></div>
+        <div id="chart" style={{ width: "600px", height: "500px" }}>
+         <div>
+
+
+         </div>
+        </div>
+        <div  className="graphLoad">
+        {isNoDataAvailable && <h1>No LoadGraphStyle Available</h1>}
+        <Link to="/urls">
+          <Button type="primary">Create Load Group</Button> 
+        </Link>
+
+
+        </div>
       </div>
     </>
   );
 };
 
 export default LoadGraph;
+ 
