@@ -44,7 +44,7 @@ const Login = (props) => {
             content: "Login successful!",
           });
           message.success("Login Success");
-        setIslogin(true);
+          setIslogin(true);
           console.log(props);
           window.location.href = "/";
         }

@@ -3,16 +3,32 @@ using Common.ImListening.Repositories.MongoDb;
 using Core.ImListening.DbModels;
 using Core.ImListening.Services.Interfaces;
 using Microsoft.AspNetCore.SignalR;
+using MongoDB.Driver;
 
 namespace Core.ImListening.Services
 {
-  public class HistoryService : IHistoryService
+    public class HistoryService : IHistoryService
     {
         private readonly IMongoDbRepository<History> _repository;
 
         public HistoryService(IMongoDbRepository<History> repository)
         {
             _repository = repository;
+        }
+        public async Task CreatIndexAsync()
+        {
+            var indexModel = new CreateIndexModel<History>(
+                                keys: Builders<History>.IndexKeys.Ascending(a => a.ExpireOnUtc),
+                                options: new CreateIndexOptions
+                                {
+                                    ExpireAfter = TimeSpan.FromSeconds(0),
+                                    Name = "ExpireAtIndex"
+                                });
+            await _repository.CreatIndexAsync(indexModel);
+            indexModel = new CreateIndexModel<History>(
+                                keys: Builders<History>.IndexKeys.Ascending(a => a.UserId).Ascending(a => a.WebhookId));
+
+            await _repository.CreatIndexAsync(indexModel);
         }
 
         public IAsyncEnumerable<History> GetHistoryAsync(string? userId = null, string? webhookPath = null, int take = 20, int skip = 0)

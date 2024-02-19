@@ -29,7 +29,13 @@ const AppRoutes = [
   },
   {
     path: '/loadGraph',
-    element: <LoadGraph />
+    element: <LoadGraph />,
+    isPrivate: true
+  },
+  {
+    path: '/history',
+    element: <Home />,
+    isPrivate: true
   },
   // {
   //   path: '/diagnostics',

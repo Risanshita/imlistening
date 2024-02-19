@@ -132,8 +132,10 @@ namespace ImListening
                 {
                     var userService = services.GetRequiredService<IUserService>();
                     var webhookService = services.GetRequiredService<IWebhookService>();
+                    var historyService = services.GetRequiredService<IHistoryService>();
                     Initialize(userService);
                     webhookService.CreatIndexAsync().Wait();
+                    historyService.CreatIndexAsync().Wait();
                 }
                 catch (Exception ex)
                 {

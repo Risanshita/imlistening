@@ -3,7 +3,7 @@ import "./LoadGraphStyle.css";
 import { authHeader, getUserId } from "../../Util";
 import { HubConnectionBuilder } from "@microsoft/signalr";
 import ApexCharts from "apexcharts";
-import { Button } from "antd";
+import { Button, List, Typography } from "antd";
 import { Link } from "react-router-dom";
 var seriesList = [];
 var XAXISRANGE = 2000;
@@ -85,7 +85,7 @@ function onlyUnique(value, index, array) {
 }
 const LoadGraph = () => {
   const [isNoDataAvailable, setIsNoDataAvailable] = useState(true);
-
+  const [paths, setPaths] = useState([]);
 
   const initChart = async () => {
     var allPaths = await getAllPaths();
@@ -150,6 +150,7 @@ const LoadGraph = () => {
         if (userId) {
           connection.on(userId + "|load-test-result", async (message) => {
             try {
+              setPaths(message);
               var se = [];
               message.forEach((a) => {
                 var s = seriesList.find((b) => b.name === a.path);
@@ -180,25 +181,33 @@ const LoadGraph = () => {
   };
   return (
     <>
-      <div className="container" style={{ width: "100%" }}>
-        <div id="chart" style={{ width: "600px", height: "500px" }}>
-         <div>
-
-
-         </div>
-        </div>
-        <div  className="graphLoad">
-        {isNoDataAvailable && <h1>No LoadGraphStyle Available</h1>}
-        <Link to="/urls">
-          <Button type="primary">Create Load Group</Button> 
-        </Link>
-
-
-        </div>
+      <div className="graphContainer" style={{ width: "100%" }}>
+     
+          <div id="chart" style={{ width: "1000px", height: "500px" }}></div>
+          <div>
+            <List
+            style={{width:"600px"}}
+              header={<div>All Paths</div>}
+              bordered
+              dataSource={paths}
+              renderItem={(item) => (
+                <List.Item>
+                  <Typography.Text>{item.path}</Typography.Text>
+                  <Typography.Text> {item.hitCount}</Typography.Text>
+                </List.Item>
+              )}
+            />
+          </div>
+     
+        {/* <div className="graphLoad">
+          {isNoDataAvailable && <h1>No LoadGraphStyle Available</h1>}
+          <Link to="/urls">
+            <Button type="primary">Create Load Group</Button>
+          </Link>
+        </div> */}
       </div>
     </>
   );
 };
 
 export default LoadGraph;
- 
