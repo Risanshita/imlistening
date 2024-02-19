@@ -14,7 +14,6 @@ export const PrivateRoute = () => {
 export const isLogin = () => (localStorage.getItem("user") ? true : false);
 
 export function authHeader(haeders) {
-  // return authorization header with basic auth credentials
   let user = JSON.parse(localStorage.getItem("user"));
 
   if (user?.authdata) {
@@ -28,7 +27,6 @@ export function authHeader(haeders) {
   }
 }
 export function authdata() {
-  // return authorization header with basic auth credentials
   let user = JSON.parse(localStorage.getItem("user"));
 
   return user?.authdata;
@@ -41,6 +39,5 @@ export function getUserId() {
 }
 
 export function logout() {
-  // remove user from local storage to log user out
   localStorage.removeItem("user");
 }

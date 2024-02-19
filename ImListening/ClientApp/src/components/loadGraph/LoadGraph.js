@@ -46,9 +46,7 @@ var options = {
     range: XAXISRANGE,
     labels: {
       show: true,
-      // datetimeFormatter: {
-      //   hour: "HH:mm",
-      // },
+
       formatter: function (value, timestamp, opts) {
         return (
           new Date(value).getHours() +
@@ -57,8 +55,6 @@ var options = {
           ":" +
           new Date(value).getSeconds()
         );
-
-        // return opts.dateFormatter(new Date(timestamp)).format("dd MMM")
       },
     },
     tooltip: {
@@ -73,9 +69,7 @@ var options = {
       },
     },
   },
-  yaxis: {
-    // max: 100,
-  },
+  yaxis: {},
   legend: {
     show: true,
   },
@@ -96,8 +90,7 @@ const LoadGraph = () => {
     }
     setIsNoDataAvailable(false);
 
-    const paths = allPaths.map((e) => e.path).filter(onlyUnique); // Add 'NewsPage'
-    // const paths = ["NewsPage"];
+    const paths = allPaths.map((e) => e.path).filter(onlyUnique);
     console.log(paths);
     seriesList = allPaths.map((a) => ({
       data: [
@@ -118,7 +111,6 @@ const LoadGraph = () => {
     await fetchLoadCount();
   };
 
-  // Call the function when the component mounts
   useEffect(() => {
     initChart();
   }, []);
@@ -185,23 +177,22 @@ const LoadGraph = () => {
   return (
     <>
       <div className="graphContainer" style={{ width: "100%" }}>
-     
-          <div id="chart" style={{ width: "1000px", height: "500px" }}></div>
-          <div>
-            <List
-            style={{width:"600px"}}
-              header={<div>All Paths</div>}
-              bordered
-              dataSource={paths}
-              renderItem={(item) => (
-                <List.Item>
-                  <Typography.Text>{item.path}</Typography.Text>
-                  <Typography.Text> {item.hitCount}</Typography.Text>
-                </List.Item>
-              )}
-            />
-          </div>
-     
+        <div id="chart" style={{ width: "1000px", height: "500px" }}></div>
+        <div>
+          <List
+            style={{ width: "600px" }}
+            header={<div>All Paths</div>}
+            bordered
+            dataSource={paths}
+            renderItem={(item) => (
+              <List.Item>
+                <Typography.Text>{item.path}</Typography.Text>
+                <Typography.Text> {item.hitCount}</Typography.Text>
+              </List.Item>
+            )}
+          />
+        </div>
+
         <div className="graphLoad">
           {isNoDataAvailable && <h1>No LoadGraphStyle Available</h1>}
           <Link to="/urls">

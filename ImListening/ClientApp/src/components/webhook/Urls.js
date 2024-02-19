@@ -90,7 +90,6 @@ const Urls = () => {
           throw new Error("Request failed");
         }
         const responseData = await response.json();
-        // Process responseData as needed
         setData(responseData);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -108,11 +107,8 @@ const Urls = () => {
     const responseData = await response.json();
     console.log(responseData);
     if (responseData.length > 0) {
-      // setIsLoadGroupPresent(true);
-      // setLoadGroups(responseData.data);
       return true;
     } else {
-      // setIsLoadGroupPresent(false);
       return false;
     }
   };
@@ -136,15 +132,12 @@ const Urls = () => {
       }),
     });
     console.log(response);
-
-    //console.log(responseData);
     if (response.status == 201) {
       setIsLoadGroupPresent(true);
       setSelectedUrls([]);
     }
     setIsLoadGroupPresent(false);
     setIsWarningModalOpen(false);
-    //setSelectedUrls([]);
   };
   const handleEdit = async (rec) => {
     setOpen(true);
@@ -279,11 +272,8 @@ const Urls = () => {
             <Col xs={24} sm={24} md={11} lg={7} className="urlBox" key={e.id}>
               <div className="idBox">
                 <div className="Urltitle">{e.id}</div>
-                {/* <Button onClick={()=>{ handleLoadTesting(e) }}>CLick</Button> */}
                 {e.isLoadTesting ? (
                   <Checkbox
-                  // isChecked={selectedUrls.includes(e.id)}
-                  // value={true}
                   checked={selectedUrls.includes(e.id)}
                     disabled={
                       !selectedUrls.includes(e.id) && selectedUrls.length === 5

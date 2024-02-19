@@ -22,7 +22,6 @@ const Users = () => {
                     throw new Error('Request failed');
                 }
                 const responseData = await response.json();
-                // Process responseData as needed
                 setData(responseData);
             } catch (error) {
                 console.error('Error fetching data:', error);
@@ -57,14 +56,6 @@ const Users = () => {
                 </span>
             ),
         },
-        // {
-        //     title: 'Action',
-        //     key: 'action',
-        //     render: (_, record) =>
-        //         <Popconfirm key={"user_table_action" + record.id} title="Sure to delete?" onConfirm={() => handleDelete(record.id)}>
-        //             <a style={{ color: 'red' }}>Delete</a>
-        //         </Popconfirm>,
-        // },
     ];
 
     const handleDelete = async (key) => {

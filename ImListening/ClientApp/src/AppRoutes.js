@@ -37,10 +37,6 @@ const AppRoutes = [
     element: <Home />,
     isPrivate: true
   },
-  // {
-  //   path: '/diagnostics',
-  //   element: <Diagnostic />
-  // },
 
 ];
 
