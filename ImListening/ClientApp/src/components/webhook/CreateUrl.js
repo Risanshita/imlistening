@@ -80,7 +80,7 @@ const CreateUrl = ({ isOpen, onClose, editData }) => {
                             content: msg,
                         });
                     }
-                    //throw new Error('Request failed');
+                  
                 } else {
                     messageApi.success({
                         type: "success",
@@ -117,7 +117,7 @@ const CreateUrl = ({ isOpen, onClose, editData }) => {
                             content: msg,
                         });
                     }
-                    //throw new Error('Request failed');
+                 
                 } else {
                     messageApi.success({
                         type: "success",
@@ -181,7 +181,6 @@ const CreateUrl = ({ isOpen, onClose, editData }) => {
             {" "}
             {contextHolder}
             <Modal
-                // title="Create new url"
                 centered
                 open={isOpen}
                 footer={null}
@@ -194,15 +193,6 @@ const CreateUrl = ({ isOpen, onClose, editData }) => {
                     <Form
                         form={form}
                         name="newurlform"
-                        // labelCol={{
-                        //   span: 8,
-                        // }}
-                        // wrapperCol={{
-                        //   span: 16,
-                        // }}
-                        // style={{
-                        //   maxWidth: 600,
-                        // }}
                         initialValues={{
                             remember: false,
                         }}
@@ -214,7 +204,6 @@ const CreateUrl = ({ isOpen, onClose, editData }) => {
                         <h4 className="urllable">Url Path</h4>
                         <Form.Item
                             name={"path"}
-                            // label="Url Path"
                             rules={[
                                 {
                                     min: 5,
@@ -228,7 +217,6 @@ const CreateUrl = ({ isOpen, onClose, editData }) => {
                         <h4 className="urllable">Status Code</h4>
                         <Form.Item
                             name={"statusCode"}
-                            // label="StatusCode"
                             rules={[
                                 {
                                     type: "number",
@@ -254,7 +242,6 @@ const CreateUrl = ({ isOpen, onClose, editData }) => {
                             <>
                                 <h4 className="urllable">ContentType</h4>
                                 <Form.Item name={"contentType"}>
-                                    {/* <Input placeholder="Default text/plain" className="inputField" /> */}
                                     <Select
                                         options={options}
                                         showSearch
@@ -272,7 +259,6 @@ const CreateUrl = ({ isOpen, onClose, editData }) => {
                                 <h4 className="urllable">Timeout(ms)</h4>
                                 <Form.Item
                                     name={"timeout"}
-                                    // label="Timeout(ms)"
                                     rules={[
                                         {
 
@@ -305,8 +291,6 @@ const CreateUrl = ({ isOpen, onClose, editData }) => {
                                     <Input placeholder="Url" className="inputField" />
                                 </Form.Item>
                                 <h4 className="urllable">Response</h4>
-
-                                {/* <Input.TextArea rows={5} className="inputField" /> */}
                                 <div>
                                     <Editor
                                         className="codeArea"

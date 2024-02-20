@@ -6,7 +6,7 @@ using System.Linq.Expressions;
 
 namespace Common.ImListening.Repositories.MongoDb
 {
-  public class MongoDbRepository<T> : IMongoDbRepository<T>
+    public class MongoDbRepository<T> : IMongoDbRepository<T>
     {
         private readonly IMongoCollection<T> _collection;
 
@@ -39,7 +39,7 @@ namespace Common.ImListening.Repositories.MongoDb
 
         public async Task ReplaceOneAsync(Expression<Func<T, bool>> predicate, T item)
         {
-          await _collection.ReplaceOneAsync(predicate, item, new ReplaceOptions { IsUpsert = true});
+            await _collection.ReplaceOneAsync(predicate, item, new ReplaceOptions { IsUpsert = true });
         }
 
         public async void Delete(string id)
@@ -47,11 +47,11 @@ namespace Common.ImListening.Repositories.MongoDb
             await _collection.DeleteOneAsync(Builders<T>.Filter.Eq("_id", id));
         }
 
-        public async Task DeleteAsync(T item,string id)
+        public async Task DeleteAsync(T item, string id)
         {
-        
+
             await _collection.DeleteOneAsync(Builders<T>.Filter.Eq("_id", id));
-            
+
         }
 
         public Task DeleteRangeAsync(IEnumerable<T> items)
@@ -85,7 +85,7 @@ namespace Common.ImListening.Repositories.MongoDb
             return res.ToCursor().ToAsyncEnumerable();
         }
 
-     
+
 
         public IAsyncEnumerable<T> GetAllAsync()
         {
@@ -115,7 +115,7 @@ namespace Common.ImListening.Repositories.MongoDb
             }
             catch (Exception ex)
             {
-                Debug.WriteLine("While update ",ex);
+                Debug.WriteLine("While update ", ex);
             }
         }
     }

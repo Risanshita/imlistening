@@ -21,5 +21,6 @@ namespace Common.ImListening.Repositories.MongoDb
         void Create(string id, T value, TimeSpan? expiry = null);
         void Update(string id, T value, TimeSpan? expiry = null);
         void Delete(string id);
+        IAsyncEnumerable<Webhook> FindWebhooksAsync(Expression<Func<Webhook, bool>> predicate, Expression<Func<Webhook, object>> include, int skip, int take, Expression<Func<Webhook, object>> orderBy, bool ascending = false);
     }
 }

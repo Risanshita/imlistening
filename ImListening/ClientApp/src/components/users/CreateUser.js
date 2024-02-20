@@ -52,7 +52,7 @@ const CreateUser = ({ isOpen, onClose }) => {
     return (
         <>   {contextHolder}
             <Modal
-                // title="Add new user"
+       
                 centered
                 open={isOpen}
                 footer={null}
@@ -64,15 +64,6 @@ const CreateUser = ({ isOpen, onClose }) => {
                 <h4 className="heading">Create New User</h4>
                     <Form
                         name="userform"
-                        // labelCol={{
-                        //     span: 8,
-                        // }}
-                        // wrapperCol={{
-                        //     span: 16,
-                        // }}
-                        // style={{
-                        //     maxWidth: 600,
-                        // }}
                         initialValues={{
                             remember: true,
                         }}
@@ -83,7 +74,6 @@ const CreateUser = ({ isOpen, onClose }) => {
                     >
                         <h4 className="urllable">Username</h4>
                         <Form.Item
-                            // label="Username"
                             name="username"
                             rules={[
                                 {
@@ -96,7 +86,6 @@ const CreateUser = ({ isOpen, onClose }) => {
                         </Form.Item>
                         <h4 className="urllable">Password</h4>
                         <Form.Item
-                            // label="Password"
                             name="password"
                             rules={[
                                 {
@@ -109,7 +98,6 @@ const CreateUser = ({ isOpen, onClose }) => {
                         </Form.Item>
                         <h4 className="urllable">Description</h4>
                         <Form.Item
-                            // label="Description"
                             name="description"
                             rules={[
                                 {
@@ -122,10 +110,6 @@ const CreateUser = ({ isOpen, onClose }) => {
                         </Form.Item>
 
                         <Form.Item
-                            // wrapperCol={{
-                            //     offset: 8,
-                            //     span: 16,
-                            // }}
                         >
                             <Row justify={'space-between'}>
                                 <Col xs={24} sm={24} md={12} lg={11} xl={11}>

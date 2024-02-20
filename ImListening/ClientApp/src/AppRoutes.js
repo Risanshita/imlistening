@@ -29,12 +29,14 @@ const AppRoutes = [
   },
   {
     path: '/loadGraph',
-    element: <LoadGraph />
+    element: <LoadGraph />,
+    isPrivate: true
   },
-  // {
-  //   path: '/diagnostics',
-  //   element: <Diagnostic />
-  // },
+  {
+    path: '/history',
+    element: <Home />,
+    isPrivate: true
+  },
 
 ];
 

@@ -3,7 +3,8 @@ import "./LoadGraphStyle.css";
 import { authHeader, getUserId } from "../../Util";
 import { HubConnectionBuilder } from "@microsoft/signalr";
 import ApexCharts from "apexcharts";
-import { Button } from "antd";
+import { Button, List, Typography } from "antd";
+import { Link } from "react-router-dom";
 var seriesList = [];
 var XAXISRANGE = 2000;
 var MAX_XAXISRANGE = 3600000;
@@ -45,9 +46,7 @@ var options = {
     range: XAXISRANGE,
     labels: {
       show: true,
-      // datetimeFormatter: {
-      //   hour: "HH:mm",
-      // },
+
       formatter: function (value, timestamp, opts) {
         return (
           new Date(value).getHours() +
@@ -56,8 +55,6 @@ var options = {
           ":" +
           new Date(value).getSeconds()
         );
-
-        // return opts.dateFormatter(new Date(timestamp)).format("dd MMM")
       },
     },
     tooltip: {
@@ -72,9 +69,7 @@ var options = {
       },
     },
   },
-  yaxis: {
-    // max: 100,
-  },
+  yaxis: {},
   legend: {
     show: true,
   },
@@ -85,6 +80,7 @@ function onlyUnique(value, index, array) {
 }
 const LoadGraph = () => {
   const [isNoDataAvailable, setIsNoDataAvailable] = useState(true);
+  const [paths, setPaths] = useState([]);
 
   const initChart = async () => {
     var allPaths = await getAllPaths();
@@ -94,8 +90,7 @@ const LoadGraph = () => {
     }
     setIsNoDataAvailable(false);
 
-    const paths = allPaths.map((e) => e.path).filter(onlyUnique); // Add 'NewsPage'
-    // const paths = ["NewsPage"];
+    const paths = allPaths.map((e) => e.path).filter(onlyUnique);
     console.log(paths);
     seriesList = allPaths.map((a) => ({
       data: [
@@ -116,7 +111,6 @@ const LoadGraph = () => {
     await fetchLoadCount();
   };
 
-  // Call the function when the component mounts
   useEffect(() => {
     initChart();
   }, []);
@@ -149,6 +143,7 @@ const LoadGraph = () => {
         if (userId) {
           connection.on(userId + "|load-test-result", async (message) => {
             try {
+              setPaths(message);
               var se = [];
               message.forEach((a) => {
                 var s = seriesList.find((b) => b.name === a.path);
@@ -181,16 +176,39 @@ const LoadGraph = () => {
   };
   return (
     <>
-      <div className="container" style={{ width: "100%" }}>
-        <div id="chart" style={{ width: "600px", height: "500px" }}></div>
-        <Button
-          onClick={() => {
-            isPause = !isPause;
-          }}
-        >
-          {isPause ? "Resume" : "Pause"}
-        </Button>
-      </div>
+      {isNoDataAvailable ? (
+        <div className="graphLoad">
+          <h1>No LoadGraphStyle Available</h1>
+          <Link to="/urls">
+            <Button type="primary">Create Load Group</Button>
+          </Link>
+        </div>
+      ) : (
+        <div className="graphContainer" style={{ width: "100%" }}>
+          <div id="chart" style={{ width: "1000px", height: "500px" }}></div>
+          <div>
+            <List
+              style={{ width: "600px" }}
+              header={<div>All Paths</div>}
+              bordered
+              dataSource={paths}
+              renderItem={(item) => (
+                <List.Item>
+                  <Typography.Text>{item.path}</Typography.Text>
+                  <Typography.Text> {item.hitCount}</Typography.Text>
+                </List.Item>
+              )}
+            />
+          </div>
+          <Button
+            onClick={() => {
+              isPause = !isPause;
+            }}
+          >
+            {isPause ? "Resume" : "Pause"}
+          </Button>
+        </div>
+      )}
     </>
   );
 };
