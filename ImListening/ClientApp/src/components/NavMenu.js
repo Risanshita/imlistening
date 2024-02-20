@@ -78,7 +78,7 @@ export class NavMenu extends Component {
               </NavLink>
               <NavLink tag={Link} onClick={logout} className="menu" to="/login">
                 <AiOutlineLogin className="menuIcon" />
-                {isLogin() ? "Login" : "Logout"}
+                {isLogin() ? "Logout" : "Login"}
               </NavLink>
             </ul>
           </Collapse>

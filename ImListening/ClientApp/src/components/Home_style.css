@@ -28,6 +28,19 @@
   .historyGrid:hover{
     box-shadow:5px 5px 20px #1A79FA;
   }
+.webhookTitle{
+  display: flex;
+  justify-content: space-between;
+}
+.copyResponse{
+  background-color: var(--blueColor);
+  color: var(--whiteColor);
+  border: none;
+  padding: 2px 15px;
+  border-radius: 10px;
+  cursor: pointer;
+
+}
 
   .WebListBox{
     /* background-color: #1A79FA; */

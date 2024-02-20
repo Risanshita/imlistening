@@ -2,6 +2,7 @@
 using Common.ImListening.Repositories.MongoDb;
 using Core.ImListening.DbModels;
 using Core.ImListening.Services.Interfaces;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.SignalR;
 using MongoDB.Driver;
 
@@ -31,19 +32,19 @@ namespace Core.ImListening.Services
             await _repository.CreatIndexAsync(indexModel);
         }
 
-        public IAsyncEnumerable<History> GetHistoryAsync(string? userId = null, string? webhookPath = null, int take = 20, int skip = 0)
+        public IAsyncEnumerable<History> GetHistoryAsync(string? userId = null, List<string>? webhookPath = null, int take = 20, int skip = 0)
         {
-            if (userId != null && webhookPath != null)
+            if (userId != null && webhookPath != null && webhookPath.Any())
             {
-                return _repository.FindAsync((a) => a.UserId == userId && a.WebhookId == webhookPath, a => a.RequestInfos, skip, take, a => a.CreateAtUtc, false);
+                return _repository.FindAsync((a) => a.UserId == userId && webhookPath.Contains(a.WebhookId), a => a.RequestInfos, skip, take, a => a.CreateAtUtc, false);
             }
             else if (userId != null)
             {
                 return _repository.FindAsync((a) => a.UserId == userId, a => a.RequestInfos, skip, take, a => a.CreateAtUtc, false);
             }
-            else if (webhookPath != null)
+            else if (webhookPath != null && webhookPath.Any())
             {
-                return _repository.FindAsync((a) => a.WebhookId == webhookPath, a => a.RequestInfos, skip, take, a => a.CreateAtUtc, false);
+                return _repository.FindAsync((a) => webhookPath.Contains(a.WebhookId), a => a.RequestInfos, skip, take, a => a.CreateAtUtc, false);
             }
             else
             {
@@ -51,9 +52,7 @@ namespace Core.ImListening.Services
             }
         }
 
-        public IAsyncEnumerable<History> GetHistory(List<string> webhookPath, int take = 20, int skip = 0)
-        {
-            return _repository.FindAsync((a) => webhookPath.Contains(a.WebhookId), a => a.RequestInfos, skip, take, a => a.CreateAtUtc, false);
-        }   
+
+        
     }
 }

@@ -1,8 +1,10 @@
-﻿using Core.ImListening.DbModels;
+﻿using Amazon.Runtime.Internal.Transform;
+using Core.ImListening.DbModels;
 using Core.ImListening.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NSwag.Generation.Processors;
+using System.Collections.Generic;
 
 namespace ImListening.Controllers
 {
@@ -19,19 +21,13 @@ namespace ImListening.Controllers
         }
 
         [HttpGet]
-        public IAsyncEnumerable<History> GetHistoryAsync([FromQuery] string? webhookPath = null, [FromQuery] int take = 20, [FromQuery] int skip = 0)
+        public IAsyncEnumerable<History> GetHistoryAsync([FromQuery] List<string>? webhookPath = null, [FromQuery] int take = 20, [FromQuery] int skip = 0)
         {
             var ls = _historyService.GetHistoryAsync(UserId, webhookPath, take, skip);
             return ls;
         }
 
-        [HttpGet("history")]
-        public async Task<IActionResult> GetHistory([FromBody] List<string> webhookPath, [FromQuery] int take = 20, [FromQuery] int skip = 0)
-        {
-            var ls = await _historyService.GetHistory(webhookPath, take, skip).ToListAsync();
-            return Ok(ls);
-        }
-
+       
         [HttpGet("load-test")]
         public ActionResult GetLoadTestingGroup()
         {

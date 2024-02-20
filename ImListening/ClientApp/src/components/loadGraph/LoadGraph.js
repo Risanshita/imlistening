@@ -15,7 +15,7 @@ var options = {
     width: 1000,
     type: "line",
     animations: {
-      enabled: true,
+      enabled: false,
       easing: "linear",
       dynamicAnimation: {
         speed: 1000,
@@ -176,39 +176,44 @@ const LoadGraph = () => {
   };
   return (
     <>
-      {isNoDataAvailable ? (
+      {isNoDataAvailable && (
         <div className="graphLoad">
           <h1>No LoadGraphStyle Available</h1>
           <Link to="/urls">
             <Button type="primary">Create Load Group</Button>
           </Link>
         </div>
-      ) : (
-        <div className="graphContainer" style={{ width: "100%" }}>
-          <div id="chart" style={{ width: "1000px", height: "500px" }}></div>
-          <div>
-            <List
-              style={{ width: "600px" }}
-              header={<div>All Paths</div>}
-              bordered
-              dataSource={paths}
-              renderItem={(item) => (
-                <List.Item>
-                  <Typography.Text>{item.path}</Typography.Text>
-                  <Typography.Text> {item.hitCount}</Typography.Text>
-                </List.Item>
-              )}
-            />
-          </div>
-          <Button
-            onClick={() => {
-              isPause = !isPause;
-            }}
-          >
-            {isPause ? "Resume" : "Pause"}
-          </Button>
-        </div>
       )}
+      <div
+        className="graphContainer"
+        style={{
+          width: "100%",
+          visibility: isNoDataAvailable ? "hidden" : "visible",
+        }}
+      >
+        <div id="chart" style={{ width: "1000px", height: "500px" }}></div>
+        <div>
+          <List
+            style={{ width: "600px" }}
+            header={<div>All Paths</div>}
+            bordered
+            dataSource={paths}
+            renderItem={(item) => (
+              <List.Item>
+                <Typography.Text>{item.path}</Typography.Text>
+                <Typography.Text> {item.hitCount}</Typography.Text>
+              </List.Item>
+            )}
+          />
+        </div>
+        <Button
+          onClick={() => {
+            isPause = !isPause;
+          }}
+        >
+          {isPause ? "Resume" : "Pause"}
+        </Button>
+      </div>
     </>
   );
 };
