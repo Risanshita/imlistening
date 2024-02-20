@@ -50,5 +50,10 @@ namespace Core.ImListening.Services
                 return _repository.FindAsync((a) => true, a => a.RequestInfos, skip, take, a => a.CreateAtUtc, false);
             }
         }
+
+        public IAsyncEnumerable<History> GetHistory(List<string> webhookPath, int take = 20, int skip = 0)
+        {
+            return _repository.FindAsync((a) => webhookPath.Contains(a.WebhookId), a => a.RequestInfos, skip, take, a => a.CreateAtUtc, false);
+        }   
     }
 }

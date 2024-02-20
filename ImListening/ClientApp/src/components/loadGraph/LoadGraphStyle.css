@@ -1,5 +1,12 @@
 ﻿.graphContainer{
-
     display: flex;
     justify-content: space-evenly;
+}
+
+.graphLoad{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 80vh;
+    justify-content: center;
 }

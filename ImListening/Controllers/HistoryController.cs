@@ -25,6 +25,13 @@ namespace ImListening.Controllers
             return ls;
         }
 
+        [HttpGet("history")]
+        public async Task<IActionResult> GetHistory([FromBody] List<string> webhookPath, [FromQuery] int take = 20, [FromQuery] int skip = 0)
+        {
+            var ls = await _historyService.GetHistory(webhookPath, take, skip).ToListAsync();
+            return Ok(ls);
+        }
+
         [HttpGet("load-test")]
         public ActionResult GetLoadTestingGroup()
         {

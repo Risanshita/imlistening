@@ -176,37 +176,39 @@ const LoadGraph = () => {
   };
   return (
     <>
-      <div className="graphContainer" style={{ width: "100%" }}>
-        <div id="chart" style={{ width: "1000px", height: "500px" }}></div>
-        <div>
-          <List
-            style={{ width: "600px" }}
-            header={<div>All Paths</div>}
-            bordered
-            dataSource={paths}
-            renderItem={(item) => (
-              <List.Item>
-                <Typography.Text>{item.path}</Typography.Text>
-                <Typography.Text> {item.hitCount}</Typography.Text>
-              </List.Item>
-            )}
-          />
-        </div>
-
+      {isNoDataAvailable ? (
         <div className="graphLoad">
-          {isNoDataAvailable && <h1>No LoadGraphStyle Available</h1>}
+          <h1>No LoadGraphStyle Available</h1>
           <Link to="/urls">
             <Button type="primary">Create Load Group</Button>
           </Link>
         </div>
-        <Button
-          onClick={() => {
-            isPause = !isPause;
-          }}
-        >
-          {isPause ? "Resume" : "Pause"}
-        </Button>
-      </div>
+      ) : (
+        <div className="graphContainer" style={{ width: "100%" }}>
+          <div id="chart" style={{ width: "1000px", height: "500px" }}></div>
+          <div>
+            <List
+              style={{ width: "600px" }}
+              header={<div>All Paths</div>}
+              bordered
+              dataSource={paths}
+              renderItem={(item) => (
+                <List.Item>
+                  <Typography.Text>{item.path}</Typography.Text>
+                  <Typography.Text> {item.hitCount}</Typography.Text>
+                </List.Item>
+              )}
+            />
+          </div>
+          <Button
+            onClick={() => {
+              isPause = !isPause;
+            }}
+          >
+            {isPause ? "Resume" : "Pause"}
+          </Button>
+        </div>
+      )}
     </>
   );
 };
