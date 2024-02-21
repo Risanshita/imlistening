@@ -1,1 +1,45 @@
-﻿
+﻿.headingBox{
+    margin-top: 10%;
+    padding: 30px;
+    height: 40vh;
+}
+
+.homeTitle{
+    text-align: center;
+    font-size: 90px;
+    font-weight: bold;
+}
+.top{
+    margin-bottom: -30px;
+}
+
+.homeDes{
+    text-align: center;
+    font-size: 20px;
+    font-weight: 400;
+
+}
+.tryButton{
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+}
+
+.homeBtn{
+    padding: 25px 80px;
+    display: flex;  
+    justify-content: center;
+    align-items: center;
+    border-radius: 15px;
+    font-size: 20px;
+}
+
+.imageBox{
+    display: flex;
+    justify-content: center;
+    border-radius: 20px;
+}
+
+.imagePreview{
+    border-radius: 20px;
+}
