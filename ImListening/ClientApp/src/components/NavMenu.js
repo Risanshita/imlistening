@@ -67,12 +67,12 @@ export class NavMenu extends Component {
               </NavLink>
               <NavLink tag={Link} className="menu" to="/history">
                 <AiOutlineHistory className="menuIcon" />
-                History/Logs
+                History/Live
               </NavLink>
               <NavLink tag={Link} className="menu" to="/loadGraph">
                 {/* <AreaChartOutlined  className="menuIcon"  /> */}
                 <BarChartOutlined  className="menuIcon"/>
-                Load Graph
+                Live Graph
               </NavLink>
               <NavLink tag={Link} className="menu" to="/Users">
                 <AiOutlineTeam className="menuIcon" />

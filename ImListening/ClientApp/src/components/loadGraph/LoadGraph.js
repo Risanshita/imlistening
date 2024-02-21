@@ -176,19 +176,10 @@ const LoadGraph = () => {
   };
   return (
     <>
-      <div
-        className="animationButton"
-        style={{
-          visibility: isNoDataAvailable ? "hidden" : "visible",
-        }}
-      >
-       Graph Animation
-        <Button
-          onClick={() => {
-            isPause = !isPause;
-          }}
-        >
-      {isNoDataAvailable && (
+
+
+
+{isNoDataAvailable && (
         <div className="graphLoad">
           <h1>No LoadGraphStyle Available</h1>
           <Link to="/urls">
@@ -198,10 +189,21 @@ const LoadGraph = () => {
       )}
 
 
-    
-          {isPause ? "Resume" : "Pause"}
+      <div
+        className="animationButton"
+        style={{
+          visibility: isNoDataAvailable ? "hidden" : "visible",
+        }}
+      >
+        <Button
+          onClick={() => {
+            isPause = !isPause;
+          }}
+        >
+                {isPause ? "Resume Graph" : " Pause Graph"}
         </Button>
         </div>
+       
       <div
         className="graphContainer"
         style={{

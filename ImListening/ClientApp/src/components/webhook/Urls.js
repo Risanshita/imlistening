@@ -123,7 +123,7 @@ const Urls = () => {
       }
     }
     messageApi.success({
-      content: "Load Group Created",
+      content: "Load test group created",
     });
     const paths = { paths: selectedUrls };
     const response = await fetch("api/webhooks/load-test", {
@@ -152,7 +152,7 @@ const Urls = () => {
       .writeText(url)
       .then(() => {
         messageApi.success({
-          content: "Url copied to clipboard!",
+          content: "Copied to clipboard!",
         });
       })
       .catch((error) => {
@@ -231,7 +231,7 @@ const Urls = () => {
               className="btn"
               onClick={() => createLoadGroup()}
             >
-              Create Load Group
+              Create load group
             </Button>
           ) : null}
 
@@ -255,7 +255,7 @@ const Urls = () => {
           />
 
           <Button type="primary" className="btn" onClick={showModal}>
-            New Url <LinkOutlined />
+            New url <LinkOutlined />
           </Button>
         </Row>
       </Row>

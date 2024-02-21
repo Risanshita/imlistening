@@ -30,3 +30,12 @@
     border-radius: 10px;
     height: 0px;
 }
+
+.graphLoad{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 70vh;
+    width: 100%;
+}

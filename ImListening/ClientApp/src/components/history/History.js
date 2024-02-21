@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { HttpTransportType, HubConnectionBuilder } from "@microsoft/signalr";
-import { authHeader,getUserId } from "../../Util";
+import { authHeader, getUserId } from "../../Util";
 import {
   Card,
   Col,
@@ -11,6 +11,7 @@ import {
   Select,
   Dropdown,
   Space,
+  Tooltip,
 } from "antd";
 import {
   ClockCircleOutlined,
@@ -125,12 +126,12 @@ const History = () => {
       .writeText(jsonText)
       .then(() => {
         messageApi.success({
-          content: "Url copied to clipboard!",
+          content: "Copied to clipboard!",
         });
       })
       .catch((error) => {
         messageApi.error({
-          content: "Failed to copy text to clipboard!",
+          content: "Failed to copy to clipboard!",
         });
       });
   };
@@ -141,12 +142,12 @@ const History = () => {
     return csvString;
   }
 
-  function downloadJSON(history,filename) {
+  function downloadJSON(history, filename) {
     const jsonString = JSON.stringify(history, null, 2);
     const blob = new Blob([jsonString], { type: "application/json" });
     const link = document.createElement("a");
     link.href = window.URL.createObjectURL(blob);
-    link.download = `${filename}.json` ;
+    link.download = `${filename}.json`;
     link.click();
   }
 
@@ -205,34 +206,40 @@ const History = () => {
     getHistory(5000);
   };
 
-  const downloadCurrentHistory = () =>{
-    downloadJSON(history,"CurrentHistory");
-  }
-
-const getHistory = (dataCount) => {
-  const url = `/history?skip=0&take=${dataCount}`;
-  fetch(url, {
-    method: "GET",
-    headers: authHeader(),
-  })
-    .then((response) => response.json())
-    .then((data) => {
-      downloadJSON(data,`WebhookHistory_${dataCount}`);
-    })
-    .catch((error) => {
-      console.error("Error fetching data:", error);
-    });
+  const downloadCurrentHistory = () => {
+    downloadJSON(history, "CurrentHistory");
   };
 
-
+  const getHistory = (dataCount) => {
+    const url = `/history?skip=0&take=${dataCount}`;
+    fetch(url, {
+      method: "GET",
+      headers: authHeader(),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        downloadJSON(data, `WebhookHistory_${dataCount}`);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+  };
 
   return (
     <div>
       {contextHolder}
       <Row style={{ justifyContent: "space-between" }}>
-        <div style={{display:"flex"}}>
-        <h2 className="Heading">Webhook List</h2>
-        <ArrowDownOutlined onClick={downloadCurrentHistory} className="downloadCurrentHistory"/>
+        <div style={{ display: "flex" }}>
+          <h2 className="Heading">History</h2>
+          <Tooltip
+            title="Download history as Json"
+            style={{ backgroundColor: "white" }}
+          >
+            <ArrowDownOutlined
+              onClick={downloadCurrentHistory}
+              className="downloadCurrentHistory"
+            />
+          </Tooltip>
         </div>
 
         <div className="filterBox">
@@ -254,13 +261,18 @@ const getHistory = (dataCount) => {
               </Space>
             )}
           />
-          <Dropdown.Button
-            label="Export Json"
-            menu={menuProps}
-            onClick={handleButtonClick}
+          <Tooltip
+            title="Export last 5000 history"
+            style={{ backgroundColor: "white" }}
           >
-            Export all 5000
-          </Dropdown.Button>
+            <Dropdown.Button
+              label="Export Json"
+              menu={menuProps}
+              onClick={handleButtonClick}
+            >
+              Export json
+            </Dropdown.Button>
+          </Tooltip>
         </div>
       </Row>
       <Row justify={"space-between"} gutter={40}>
@@ -283,7 +295,7 @@ const getHistory = (dataCount) => {
             onItemPreview={onItemPreview}
           />
         </Col>
-        {(selectedWebhook || previewWebhook) ? (
+        {selectedWebhook || previewWebhook ? (
           <Col
             md={16}
             style={{
@@ -296,31 +308,41 @@ const getHistory = (dataCount) => {
           >
             <div>
               <div className="webhookTitle">
-                <h2 className="webdetails">Webhook Details</h2>
+                <h2 className="webdetails">History Details</h2>
                 {/* <button onClick={copyResponse} className="copyResponse">
                   Copy Response
                 </button> */}
-                <CopyOutlined width={60} height={60}  className="copyResponse" onClick={copyResponse} />
+
+
+
+                <CopyOutlined
+                  width={60}
+                  height={60}
+                  className="copyResponse"
+                  onClick={copyResponse}
+                />
               </div>
               <WebhookDetails webhook={previewWebhook ?? selectedWebhook} />
             </div>
           </Col>
-        ): <Col
-        md={16}
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          border: "1px dashed gray",
-          wordWrap: "break-word",
-          padding: 5,
-          borderRadius: 10,
-          height: "85vh",
-          color:"grey"
-        }}
-      >
-        No webhook selected
-      </Col>}
+        ) : (
+          <Col
+            md={16}
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              border: "1px dashed gray",
+              wordWrap: "break-word",
+              padding: 5,
+              borderRadius: 10,
+              height: "85vh",
+              color: "grey",
+            }}
+          >
+            No webhook selected
+          </Col>
+        )}
       </Row>
     </div>
   );
