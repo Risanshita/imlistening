@@ -1,0 +1,83 @@
+:root {
+    --bgColor : #F3F3F3;
+    --textColor : #424242;
+    --whiteColor : #FFFFFF;
+    --divColor: #FFFFFF;
+    --blueColor : #1A79FA;
+    --lableColor : #797979;
+  
+  }
+  
+  .darkTheme {
+    --bgColor : #424242;
+    --textColor : #FFFFFF;
+    --whiteColor : #FFFFFF;
+    --divColor: #555555;
+    --blueColor : #1A79FA;
+    --lableColor : #797979;
+  }
+
+
+  .historyGrid{
+    padding: 10px;
+    width: 100%;
+    background-color: var(--divColor);
+    border: 1px dashed var(--blueColor);
+    transition: 0.8s box-shadow;
+  }
+
+  .filterBox{
+    width: 400px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    justify-items: end; 
+  }
+  .historyGrid:hover{
+    box-shadow:5px 5px 20px #1A79FA;
+  }
+.webhookTitle{
+  display: flex;
+  justify-content: space-between;
+}
+.copyResponse{
+  /* padding: 10px; */
+  width: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10px;
+  height: 40px;
+  background-color: var(--whiteColor);
+}
+
+  .WebListBox{
+    /* background-color: #1A79FA; */
+    width: 200px;
+    height: 100%;
+    overflow: auto;
+    
+  }
+
+  .downloadCurrentHistory{
+    margin-left: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 40px;
+    border-radius: 10px;
+    height: 40px;
+    background-color: var(--whiteColor);
+  }
+
+  .webdetails{
+    color: var(--textColor);
+    text-align: center;
+  }
+  .receivedTime{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+  }

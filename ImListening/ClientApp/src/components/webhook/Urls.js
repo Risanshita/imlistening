@@ -122,7 +122,9 @@ const Urls = () => {
         return;
       }
     }
-
+    messageApi.success({
+      content: "Load Group Created",
+    });
     const paths = { paths: selectedUrls };
     const response = await fetch("api/webhooks/load-test", {
       body: JSON.stringify(paths),
@@ -217,7 +219,6 @@ const Urls = () => {
     console.log(selectedUrls.length);
   };
 
-
   return (
     <div>
       {contextHolder}
@@ -234,9 +235,6 @@ const Urls = () => {
             </Button>
           ) : null}
 
-    
-        
-          
           <Modal
             title="Warning!"
             open={isWarningModalOpen}
@@ -274,7 +272,7 @@ const Urls = () => {
                 <div className="Urltitle">{e.id}</div>
                 {e.isLoadTesting ? (
                   <Checkbox
-                  checked={selectedUrls.includes(e.id)}
+                    checked={selectedUrls.includes(e.id)}
                     disabled={
                       !selectedUrls.includes(e.id) && selectedUrls.length === 5
                     }

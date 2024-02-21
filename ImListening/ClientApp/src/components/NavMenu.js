@@ -13,8 +13,13 @@ import {
   AiOutlineTeam,
   AiOutlinePaperClip,
   AiOutlineLogin,
-  AiOutlineLogout,
+  AreaChartOutlined ,
+
 } from "react-icons/ai";
+import {
+  AiOutlineLogout,
+  BarChartOutlined,
+} from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import logo from "./../assets/logo.png";
 import "./NavMenu.css";
@@ -60,12 +65,13 @@ export class NavMenu extends Component {
               <NavLink tag={Link} className="menu" to="/">
                 <AiFillHome className="menuIcon" /> Home
               </NavLink>
-              <NavLink tag={Link} className="menu" to="/">
+              <NavLink tag={Link} className="menu" to="/history">
                 <AiOutlineHistory className="menuIcon" />
-                History
+                History/Logs
               </NavLink>
               <NavLink tag={Link} className="menu" to="/loadGraph">
-                <AiOutlineHistory className="menuIcon" />
+                {/* <AreaChartOutlined  className="menuIcon"  /> */}
+                <BarChartOutlined  className="menuIcon"/>
                 Load Graph
               </NavLink>
               <NavLink tag={Link} className="menu" to="/Users">
