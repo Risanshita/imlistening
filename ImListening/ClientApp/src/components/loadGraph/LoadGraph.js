@@ -23,6 +23,36 @@ var options = {
     },
     toolbar: {
       show: true,
+      offsetX: 0,
+      offsetY: 0,
+      tools: {
+        download: true,
+        selection: true,
+        zoom: true,
+        zoomin: true,
+        zoomout: true,
+        pan: true,
+        reset: true,
+        customIcons: [],
+      },
+      export: {
+        csv: {
+          filename: "load-test-result",
+          columnDelimiter: ",",
+          headerCategory: "Datetime",
+          headerValue: "value",
+          dateFormatter(timestamp) {
+            return getDateTimeFormat(timestamp);
+          },
+        },
+        svg: {
+          filename: "load-test-result",
+        },
+        png: {
+          filename: "load-test-result",
+        },
+      },
+      autoSelected: "zoom",
     },
     zoom: {
       enabled: false,
@@ -46,26 +76,13 @@ var options = {
     range: XAXISRANGE,
     labels: {
       show: true,
-
       formatter: function (value, timestamp, opts) {
-        return (
-          new Date(value).getHours() +
-          ":" +
-          new Date(value).getMinutes() +
-          ":" +
-          new Date(value).getSeconds()
-        );
+        return getTimeFormat(value);
       },
     },
     tooltip: {
       formatter: function (val, opts) {
-        return (
-          new Date(val).getHours() +
-          ":" +
-          new Date(val).getMinutes() +
-          ":" +
-          new Date(val).getSeconds()
-        );
+        return getDateTimeFormat(val);
       },
     },
   },
@@ -78,6 +95,30 @@ var isPause = false;
 function onlyUnique(value, index, array) {
   return array.indexOf(value) === index;
 }
+const getDateTimeFormat = (time) => {
+  return (
+    new Date(time).getFullYear() +
+    "-" +
+    new Date(time).getMonth() +
+    "-" +
+    new Date(time).getDate() +
+    "T" +
+    new Date(time).getHours() +
+    ":" +
+    new Date(time).getMinutes() +
+    ":" +
+    new Date(time).getSeconds()
+  );
+};
+const getTimeFormat = (time) => {
+  return (
+    new Date(time).getHours() +
+    ":" +
+    new Date(time).getMinutes() +
+    ":" +
+    new Date(time).getSeconds()
+  );
+};
 const LoadGraph = () => {
   const [isNoDataAvailable, setIsNoDataAvailable] = useState(true);
   const [paths, setPaths] = useState([]);
@@ -89,7 +130,6 @@ const LoadGraph = () => {
       return;
     }
     setIsNoDataAvailable(false);
-
     const paths = allPaths.map((e) => e.path).filter(onlyUnique);
     console.log(paths);
     seriesList = allPaths.map((a) => ({
@@ -176,10 +216,7 @@ const LoadGraph = () => {
   };
   return (
     <>
-
-
-
-{isNoDataAvailable && (
+      {isNoDataAvailable && (
         <div className="graphLoad">
           <h1>No LoadGraphStyle Available</h1>
           <Link to="/urls">
@@ -187,7 +224,6 @@ const LoadGraph = () => {
           </Link>
         </div>
       )}
-
 
       <div
         className="animationButton"
@@ -200,18 +236,17 @@ const LoadGraph = () => {
             isPause = !isPause;
           }}
         >
-                {isPause ? "Resume Graph" : " Pause Graph"}
+          {isPause ? "Resume Graph" : " Pause Graph"}
         </Button>
-        </div>
-       
+      </div>
+
       <div
         className="graphContainer"
         style={{
           visibility: isNoDataAvailable ? "hidden" : "visible",
         }}
       >
-       
-        <div className="graphBox" id="chart" ></div>
+        <div className="graphBox" id="chart"></div>
         <div>
           <List
             className="pathList"
@@ -226,7 +261,6 @@ const LoadGraph = () => {
             )}
           />
         </div>
-     
       </div>
     </>
   );

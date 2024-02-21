@@ -8,7 +8,7 @@ const Home = () => {
       <Col>
         <div className="headingBox">
           <div className="homeTitle top"> Powerful tool </div>
-          <div className="homeTitle"> For Developers </div>
+          <div className="homeTitle"> For Software Engineers </div>
           <div className="homeDes">Test your endpoint and </div>
           <div className="tryButton">
             <Button type="primary" className="homeBtn">
