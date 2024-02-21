@@ -81,3 +81,11 @@
     gap: 10px;
 
   }
+
+  .noSelectedWebhook{
+    background-color: #797979;
+    height: 90vh;
+    width: 100px;
+    height: 100px;
+    
+  }

@@ -283,7 +283,7 @@ const getHistory = (dataCount) => {
             onItemPreview={onItemPreview}
           />
         </Col>
-        {(selectedWebhook || previewWebhook) && (
+        {(selectedWebhook || previewWebhook) ? (
           <Col
             md={16}
             style={{
@@ -305,7 +305,22 @@ const getHistory = (dataCount) => {
               <WebhookDetails webhook={previewWebhook ?? selectedWebhook} />
             </div>
           </Col>
-        )}
+        ): <Col
+        md={16}
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          border: "1px dashed gray",
+          wordWrap: "break-word",
+          padding: 5,
+          borderRadius: 10,
+          height: "85vh",
+          color:"grey"
+        }}
+      >
+        No webhook selected
+      </Col>}
       </Row>
     </div>
   );
