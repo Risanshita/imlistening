@@ -1,6 +1,7 @@
 import { Counter } from "./components/Counter";
 import Home from "./components/Home";
 import Login from "./components/Login";
+import History from "./components/history/History";
 import LoadGraph from "./components/loadGraph/LoadGraph";
 import Users from "./components/users/Users";
 import Urls from "./components/webhook/Urls";
@@ -8,7 +9,7 @@ import Urls from "./components/webhook/Urls";
 const AppRoutes = [
   {
     index: true,
-    element: <Home />
+    element: <Home/>
   },
   {
     path: '/counter',
@@ -34,7 +35,7 @@ const AppRoutes = [
   },
   {
     path: '/history',
-    element: <Home />,
+    element:<History/>,
     isPrivate: true
   },
 

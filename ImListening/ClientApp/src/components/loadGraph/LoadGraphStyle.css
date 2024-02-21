@@ -1,12 +1,41 @@
 ﻿.graphContainer{
+ 
     display: flex;
     justify-content: space-evenly;
+    height: 720px
+}
+
+.animationButton{
+    display: flex   ;
+    margin-top: 50px;
+    margin-left: -53px;
+    gap: 20px;
+    align-items: center;
+    margin-bottom: 10px;
+
+}
+
+.pathList{
+    align-items: start;
+    margin-left: 10px;
+    background-color: white;
+    border-radius: 10px;
+    height: 100%;
+    width: 400px;
+}
+
+
+.graphBox{
+    background-color: white;
+    border-radius: 10px;
+    height: 0px;
 }
 
 .graphLoad{
     display: flex;
     flex-direction: column;
-    align-items: center;
-    height: 80vh;
     justify-content: center;
+    align-items: center;
+    height: 70vh;
+    width: 100%;
 }

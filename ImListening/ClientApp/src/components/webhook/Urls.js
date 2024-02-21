@@ -122,7 +122,9 @@ const Urls = () => {
         return;
       }
     }
-
+    messageApi.success({
+      content: "Load test group created",
+    });
     const paths = { paths: selectedUrls };
     const response = await fetch("api/webhooks/load-test", {
       body: JSON.stringify(paths),
@@ -150,7 +152,7 @@ const Urls = () => {
       .writeText(url)
       .then(() => {
         messageApi.success({
-          content: "Url copied to clipboard!",
+          content: "Copied to clipboard!",
         });
       })
       .catch((error) => {
@@ -217,7 +219,6 @@ const Urls = () => {
     console.log(selectedUrls.length);
   };
 
-
   return (
     <div>
       {contextHolder}
@@ -230,13 +231,10 @@ const Urls = () => {
               className="btn"
               onClick={() => createLoadGroup()}
             >
-              Create Load Group
+              Create load group
             </Button>
           ) : null}
 
-    
-        
-          
           <Modal
             title="Warning!"
             open={isWarningModalOpen}
@@ -257,7 +255,7 @@ const Urls = () => {
           />
 
           <Button type="primary" className="btn" onClick={showModal}>
-            New Url <LinkOutlined />
+            New url <LinkOutlined />
           </Button>
         </Row>
       </Row>
@@ -274,7 +272,7 @@ const Urls = () => {
                 <div className="Urltitle">{e.id}</div>
                 {e.isLoadTesting ? (
                   <Checkbox
-                  checked={selectedUrls.includes(e.id)}
+                    checked={selectedUrls.includes(e.id)}
                     disabled={
                       !selectedUrls.includes(e.id) && selectedUrls.length === 5
                     }

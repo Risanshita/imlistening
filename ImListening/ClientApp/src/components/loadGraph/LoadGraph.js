@@ -3,7 +3,7 @@ import "./LoadGraphStyle.css";
 import { authHeader, getUserId } from "../../Util";
 import { HubConnectionBuilder } from "@microsoft/signalr";
 import ApexCharts from "apexcharts";
-import { Button, List, Typography } from "antd";
+import { Button, List, Row, Typography } from "antd";
 import { Link } from "react-router-dom";
 var seriesList = [];
 var XAXISRANGE = 2000;
@@ -23,6 +23,36 @@ var options = {
     },
     toolbar: {
       show: true,
+      offsetX: 0,
+      offsetY: 0,
+      tools: {
+        download: true,
+        selection: true,
+        zoom: true,
+        zoomin: true,
+        zoomout: true,
+        pan: true,
+        reset: true,
+        customIcons: [],
+      },
+      export: {
+        csv: {
+          filename: "load-test-result",
+          columnDelimiter: ",",
+          headerCategory: "Datetime",
+          headerValue: "value",
+          dateFormatter(timestamp) {
+            return getDateTimeFormat(timestamp);
+          },
+        },
+        svg: {
+          filename: "load-test-result",
+        },
+        png: {
+          filename: "load-test-result",
+        },
+      },
+      autoSelected: "zoom",
     },
     zoom: {
       enabled: false,
@@ -46,26 +76,13 @@ var options = {
     range: XAXISRANGE,
     labels: {
       show: true,
-
       formatter: function (value, timestamp, opts) {
-        return (
-          new Date(value).getHours() +
-          ":" +
-          new Date(value).getMinutes() +
-          ":" +
-          new Date(value).getSeconds()
-        );
+        return getTimeFormat(value);
       },
     },
     tooltip: {
       formatter: function (val, opts) {
-        return (
-          new Date(val).getHours() +
-          ":" +
-          new Date(val).getMinutes() +
-          ":" +
-          new Date(val).getSeconds()
-        );
+        return getDateTimeFormat(val);
       },
     },
   },
@@ -78,6 +95,30 @@ var isPause = false;
 function onlyUnique(value, index, array) {
   return array.indexOf(value) === index;
 }
+const getDateTimeFormat = (time) => {
+  return (
+    new Date(time).getFullYear() +
+    "-" +
+    new Date(time).getMonth() +
+    "-" +
+    new Date(time).getDate() +
+    "T" +
+    new Date(time).getHours() +
+    ":" +
+    new Date(time).getMinutes() +
+    ":" +
+    new Date(time).getSeconds()
+  );
+};
+const getTimeFormat = (time) => {
+  return (
+    new Date(time).getHours() +
+    ":" +
+    new Date(time).getMinutes() +
+    ":" +
+    new Date(time).getSeconds()
+  );
+};
 const LoadGraph = () => {
   const [isNoDataAvailable, setIsNoDataAvailable] = useState(true);
   const [paths, setPaths] = useState([]);
@@ -89,7 +130,6 @@ const LoadGraph = () => {
       return;
     }
     setIsNoDataAvailable(false);
-
     const paths = allPaths.map((e) => e.path).filter(onlyUnique);
     console.log(paths);
     seriesList = allPaths.map((a) => ({
@@ -184,17 +224,32 @@ const LoadGraph = () => {
           </Link>
         </div>
       )}
+
       <div
-        className="graphContainer"
+        className="animationButton"
         style={{
-          width: "100%",
           visibility: isNoDataAvailable ? "hidden" : "visible",
         }}
       >
-        <div id="chart" style={{ width: "1000px", height: "500px" }}></div>
+        <Button
+          onClick={() => {
+            isPause = !isPause;
+          }}
+        >
+          {isPause ? "Resume Graph" : " Pause Graph"}
+        </Button>
+      </div>
+
+      <div
+        className="graphContainer"
+        style={{
+          visibility: isNoDataAvailable ? "hidden" : "visible",
+        }}
+      >
+        <div className="graphBox" id="chart"></div>
         <div>
           <List
-            style={{ width: "600px" }}
+            className="pathList"
             header={<div>All Paths</div>}
             bordered
             dataSource={paths}
@@ -206,13 +261,6 @@ const LoadGraph = () => {
             )}
           />
         </div>
-        <Button
-          onClick={() => {
-            isPause = !isPause;
-          }}
-        >
-          {isPause ? "Resume" : "Pause"}
-        </Button>
       </div>
     </>
   );
