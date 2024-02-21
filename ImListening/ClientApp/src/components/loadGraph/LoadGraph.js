@@ -3,7 +3,7 @@ import "./LoadGraphStyle.css";
 import { authHeader, getUserId } from "../../Util";
 import { HubConnectionBuilder } from "@microsoft/signalr";
 import ApexCharts from "apexcharts";
-import { Button, List, Typography } from "antd";
+import { Button, List, Row, Typography } from "antd";
 import { Link } from "react-router-dom";
 var seriesList = [];
 var XAXISRANGE = 2000;
@@ -176,6 +176,18 @@ const LoadGraph = () => {
   };
   return (
     <>
+      <div
+        className="animationButton"
+        style={{
+          visibility: isNoDataAvailable ? "hidden" : "visible",
+        }}
+      >
+       Graph Animation
+        <Button
+          onClick={() => {
+            isPause = !isPause;
+          }}
+        >
       {isNoDataAvailable && (
         <div className="graphLoad">
           <h1>No LoadGraphStyle Available</h1>
@@ -184,17 +196,23 @@ const LoadGraph = () => {
           </Link>
         </div>
       )}
+
+
+    
+          {isPause ? "Resume" : "Pause"}
+        </Button>
+        </div>
       <div
         className="graphContainer"
         style={{
-          width: "100%",
           visibility: isNoDataAvailable ? "hidden" : "visible",
         }}
       >
-        <div id="chart" style={{ width: "1000px", height: "500px" }}></div>
+       
+        <div className="graphBox" id="chart" ></div>
         <div>
           <List
-            style={{ width: "600px" }}
+            className="pathList"
             header={<div>All Paths</div>}
             bordered
             dataSource={paths}
@@ -206,13 +224,7 @@ const LoadGraph = () => {
             )}
           />
         </div>
-        <Button
-          onClick={() => {
-            isPause = !isPause;
-          }}
-        >
-          {isPause ? "Resume" : "Pause"}
-        </Button>
+     
       </div>
     </>
   );
