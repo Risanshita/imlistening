@@ -1,13 +1,14 @@
 import { Button, Checkbox, Form, Input, Row, message, Col } from "antd";
 import "./LoginStyle.css";
-import { AiOutlineLogin} from "react-icons/ai";
-import { FiLock,FiSmile } from "react-icons/fi";
+import { AiOutlineLogin } from "react-icons/ai";
+import { FiLock, FiSmile } from "react-icons/fi";
 import useSelection from "antd/es/table/hooks/useSelection";
 import { useState } from "react";
 import { setIslogin } from "../Util";
+import event from "../event";
 const Login = (props) => {
   const [messageApi, contextHolder] = message.useMessage();
- const [isLogin, setIslogin]=useState()
+  const [isLogin, setIslogin] = useState();
   const onFinish = (values) => {
     console.log("Success:", values);
     login(values);
@@ -38,6 +39,7 @@ const Login = (props) => {
           responseData.authdata = window.btoa(
             values.username + ":" + values.password
           );
+          event.emit("onLoggedIn");
           localStorage.setItem("user", JSON.stringify(responseData));
           messageApi.success({
             type: "success",
@@ -72,7 +74,7 @@ const Login = (props) => {
             onFinishFailed={onFinishFailed}
             autoComplete="off"
           >
-             <h4 className="lable">USERNAME</h4>
+            <h4 className="lable">USERNAME</h4>
             <Form.Item
               name="username"
               rules={[
@@ -82,7 +84,7 @@ const Login = (props) => {
                 },
               ]}
             >
-              <Input  className="userNameField" />
+              <Input className="userNameField" />
             </Form.Item>
 
             <h4 className="lable">PASSWORD</h4>
@@ -95,21 +97,16 @@ const Login = (props) => {
                 },
               ]}
             >
-              <Input.Password className="pwdNameField"/>
+              <Input.Password className="pwdNameField" />
             </Form.Item>
 
-            <Form.Item
-              name="remember"
-              valuePropName="checked"
-            >
+            <Form.Item name="remember" valuePropName="checked">
               <Checkbox className="Checkbox">Remember me</Checkbox>
             </Form.Item>
 
-            <Form.Item
-         
-            >
+            <Form.Item>
               <Button className="loginBtn" type="primary" htmlType="submit">
-              <AiOutlineLogin className="icon"/>  LOGIN
+                <AiOutlineLogin className="icon" /> LOGIN
               </Button>
             </Form.Item>
           </Form>

@@ -13,29 +13,32 @@ import {
   AiOutlineTeam,
   AiOutlinePaperClip,
   AiOutlineLogin,
-  AreaChartOutlined ,
-
 } from "react-icons/ai";
-import {
-  AiOutlineLogout,
-  BarChartOutlined,
-} from "@ant-design/icons";
+import { BarChartOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import logo from "./../assets/logo.png";
 import "./NavMenu.css";
 import { logout } from "../Util";
 import { isLogin } from "../Util";
+import event from "../event";
 
 export class NavMenu extends Component {
   static displayName = NavMenu.name;
-
   constructor(props) {
     super(props);
 
     this.toggleNavbar = this.toggleNavbar.bind(this);
     this.state = {
       collapsed: true,
+      isLoggedIn: isLogin(),
     };
+
+    event.on("onLoggedIn", () => {
+      this.setState({ ...this.state, isLoggedIn: true });
+    });
+    event.on("onLoggedOut", () => {
+      this.setState({ ...this.state, isLoggedIn: false });
+    });
   }
 
   toggleNavbar() {
@@ -71,7 +74,7 @@ export class NavMenu extends Component {
               </NavLink>
               <NavLink tag={Link} className="menu" to="/loadGraph">
                 {/* <AreaChartOutlined  className="menuIcon"  /> */}
-                <BarChartOutlined  className="menuIcon"/>
+                <BarChartOutlined className="menuIcon" />
                 Live Graph
               </NavLink>
               <NavLink tag={Link} className="menu" to="/Users">
@@ -84,7 +87,7 @@ export class NavMenu extends Component {
               </NavLink>
               <NavLink tag={Link} onClick={logout} className="menu" to="/login">
                 <AiOutlineLogin className="menuIcon" />
-                {isLogin() ? "Logout" : "Login"}
+                {this.state.isLoggedIn ? "Logout" : "Login"}
               </NavLink>
             </ul>
           </Collapse>

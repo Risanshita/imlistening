@@ -38,7 +38,7 @@ namespace Core.ImListening.Services
             return _repository.CreateAsync(new Webhook
             {
                 ContentType = request.ContentType,
-                ExpireOnUtc = request.IsLoadTesting ? DateTime.UtcNow.AddDays(7) : DateTime.UtcNow.AddMinutes(request.ExpireAfterMin),
+                ExpireOnUtc = request.IsLoadTesting ? DateTime.UtcNow.AddDays(365) : DateTime.UtcNow.AddMinutes(request.ExpireAfterMin),
                 Id = string.IsNullOrWhiteSpace(request.Path) ? Guid.NewGuid().ToString() : request.Path,
                 Response = request.Response,
                 StatusCode = request.StatusCode,
@@ -74,7 +74,7 @@ namespace Core.ImListening.Services
             webhook.StatusCode = request.StatusCode;
             webhook.Timeout = request.Timeout;
             webhook.ForwardTo = request.ForwardTo;
-
+            
             return _repository.UpdateAsync(webhook, webhook.Id);
         }
     }

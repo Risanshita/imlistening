@@ -5,8 +5,12 @@ using Core.ImListening.Services.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.EntityFrameworkCore.InMemory.Query.Internal;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using System.Collections;
+using System.IdentityModel.Tokens.Jwt;
 using System.Net;
 using System.Text;
 
@@ -61,7 +65,7 @@ namespace Core.ImListening.Services
                 _logger.LogError("Exception while processing request.", ex);
             }
         }
-         
+
         private async Task ForwardMessage(Webhook webhook, History history)
         {
             if (!string.IsNullOrWhiteSpace(webhook.ForwardTo))
@@ -158,6 +162,37 @@ namespace Core.ImListening.Services
             {
                 requestInfo.Add(new RequestInfo(history.Id, key, value?.ToString(), "RouteData"));
             }
+
+            try
+            {
+                var token = request.Headers["Authorization"].ToString();
+                if (!string.IsNullOrWhiteSpace(token))
+                {
+                    if (token.Contains(' '))
+                    {
+                        token = token.Split(' ')[1];
+                    }
+                    var handler = new JwtSecurityTokenHandler();
+                    var jsonToken = handler.ReadToken(token);
+                    if (jsonToken is JwtSecurityToken tokenS)
+                    {
+                        foreach (var item in tokenS.Header)
+                        {
+                            requestInfo.Add(new RequestInfo(history.Id, item.Key, item.Value?.ToString(), "Authorization_Header"));
+                        }
+                        foreach (var item in tokenS.Claims)
+                        {
+                            requestInfo.Add(new RequestInfo(history.Id, item.Type, item.Value?.ToString(), "Authorization_Claims"));
+                        }
+                        requestInfo.Add(new RequestInfo(history.Id, "Issuer", tokenS.Issuer?.ToString(), "Authorization"));
+                        requestInfo.Add(new RequestInfo(history.Id, "ValidFrom", tokenS.ValidFrom.ToString("yyyy-MM-ddTHH-mm-ss.fffZ"), "Authorization"));
+                        requestInfo.Add(new RequestInfo(history.Id, "ValidTo", tokenS.ValidTo.ToString("yyyy-MM-ddTHH-mm-ss.fffZ"), "Authorization"));
+                        requestInfo.Add(new RequestInfo(history.Id, "Subject", tokenS.Subject, "Authorization"));
+                    }
+                }
+            }
+            catch
+            { }
             return requestInfo;
         }
 
@@ -220,7 +255,7 @@ namespace Core.ImListening.Services
             }
             return (ips, hostName, aliases);
         }
-         
+
         public async Task SendLoadTestResultAsync(string userId, List<object> data)
         {
             await _chatHub.Clients.All.SendAsync(userId + "|load-test-result", data);

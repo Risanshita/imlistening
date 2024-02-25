@@ -5,7 +5,12 @@
       "launchBrowser": true,
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
-        "ASPNETCORE_HOSTINGSTARTUPASSEMBLIES": "Microsoft.AspNetCore.SpaProxy"
+        "ASPNETCORE_HOSTINGSTARTUPASSEMBLIES": "Microsoft.AspNetCore.SpaProxy",
+        "MONGO_DB_CONNECTION_STRING": "mongodb://localhost:27017",
+        "DATABASE_NAME": "WebHooks",
+        "MONGO_DB_ENABLE_COMMAND_TRACING": "true",
+        "IDENTITY_PROVIDER_AUTORITY": "https://login-stage.solutionsbytext.com",
+        "IDENTITY_PROVIDER_AUDIENCE": "analytics-manager"
       },
       "applicationUrl": "https://localhost:7143;http://localhost:5103"
     },

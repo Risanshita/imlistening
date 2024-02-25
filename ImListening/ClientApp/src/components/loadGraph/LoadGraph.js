@@ -218,9 +218,9 @@ const LoadGraph = () => {
     <>
       {isNoDataAvailable && (
         <div className="graphLoad">
-          <h1>No LoadGraphStyle Available</h1>
+          <h1>No load test group available</h1>
           <Link to="/urls">
-            <Button type="primary">Create Load Group</Button>
+            <Button type="primary">Create load test group</Button>
           </Link>
         </div>
       )}
