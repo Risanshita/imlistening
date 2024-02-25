@@ -1,13 +1,8 @@
-﻿using Amazon.Runtime.Internal.Util;
-using Azure.Core;
-using Core.ImListening.ApiModels;
+﻿using Core.ImListening.ApiModels;
 using Core.ImListening.DbModels;
 using Core.ImListening.Services.Interfaces;
-using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using MongoDB.Bson.Serialization.Conventions;
-using System.IO;
 using System.Net;
 
 namespace ImListening.Controllers

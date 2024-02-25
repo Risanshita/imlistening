@@ -1,14 +1,11 @@
-﻿using Amazon.Runtime.Internal.Transform;
-using Core.ImListening.DbModels;
+﻿using Core.ImListening.DbModels;
 using Core.ImListening.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using NSwag.Generation.Processors;
-using System.Collections.Generic;
 
 namespace ImListening.Controllers
 {
-    [Route("history")]
+    [Route("/api/history")]
     [ApiController]
     [Authorize(AuthenticationSchemes = "BasicAuth")]
     public class HistoryController : BaseController
@@ -27,7 +24,6 @@ namespace ImListening.Controllers
             return ls;
         }
 
-       
         [HttpGet("load-test")]
         public ActionResult GetLoadTestingGroup()
         {
@@ -35,7 +31,7 @@ namespace ImListening.Controllers
             if (paths.Any())
             {
                 return Ok(paths.Select(a =>
-                { 
+                {
                     return new { Path = a.Key, a.Value.HitCount, Time = DateTime.UtcNow };
                 }).ToList());
             }

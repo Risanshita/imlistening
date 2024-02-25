@@ -9,6 +9,7 @@ const context = [
   "/listen/",
   "/history",
   "/chatHub/",
+  "/swagger/",
 ];
 
 const onError = (err, req, resp, target) => {

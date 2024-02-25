@@ -13,7 +13,7 @@ namespace ImListening.Controllers
     {
         private readonly IWebhookService _webhookService;
         private readonly IListenerService _listenerService;
-        public static readonly ConcurrentDictionary<string, LoadTestGroup> LoadTestingWebhooks = new(); // path, UserId
+        public static readonly ConcurrentDictionary<string, LoadTestGroup> LoadTestingWebhooks = new(); // path as Key
 
         public ListenController(IWebhookService webhookService, IListenerService listenerService)
         {
