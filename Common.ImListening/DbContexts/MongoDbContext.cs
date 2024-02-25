@@ -11,9 +11,8 @@ namespace Common.ImListening.DbContexts
         private IMongoDatabase Database { get; }
         public IMongoCollection<T> Collection { get; }
 
-        public MongoDbContext(IOptions<MongoDbConfigs> connectionSettings)
+        public MongoDbContext(MongoDbConfigs mongoDbConfigs)
         {
-            MongoDbConfigs mongoDbConfigs = connectionSettings.Value;
             MongoClientSettings clientSettings = MongoClientSettings.FromConnectionString(mongoDbConfigs.ConnectionString);
 
             if (mongoDbConfigs.EnableCommandTracing)

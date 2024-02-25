@@ -31,13 +31,12 @@ namespace ImListening.Controllers
         [HttpGet("load-test")]
         public ActionResult GetLoadTestingGroup()
         {
-            var paths = ListenController.LoadTestingUrls.Where(a => a.Value == UserId).Select(a => a.Key).ToList();
+            var paths = ListenController.LoadTestingWebhooks.Where(a => a.Value.Webhook.UserId == UserId).ToList();
             if (paths.Any())
             {
                 return Ok(paths.Select(a =>
-                {
-                    var hasCount = ListenController.LoadTestingHitCount.TryGetValue(a, out int count);
-                    return new { Path = a, HitCount = hasCount ? count : 0, Time = DateTime.UtcNow };
+                { 
+                    return new { Path = a.Key, a.Value.HitCount, Time = DateTime.UtcNow };
                 }).ToList());
             }
             return NotFound();

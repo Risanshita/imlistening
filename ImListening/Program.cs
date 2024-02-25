@@ -2,15 +2,12 @@ using Common.ImListening.DbContexts;
 using Common.ImListening.Repositories.InMemoryDb;
 using Common.ImListening.Repositories.MongoDb;
 using Core.ImListening;
-using Core.ImListening.DbModels;
 using Core.ImListening.Services;
 using Core.ImListening.Services.Interfaces;
 using ImListening.Controllers;
 using ImListening.Handlers;
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.VisualBasic;
-using MongoDB.Driver.Core.Operations;
+using Microsoft.IdentityModel.Tokens;
 using NSwag;
 using NSwag.Generation.Processors.Security;
 
@@ -33,21 +30,32 @@ namespace ImListening
                   builder.AddConsole();
               });
 
-
-            builder.Services.AddAuthentication(options =>
+            builder.Services
+            .AddAuthentication(options =>
             {
-                options.DefaultAuthenticateScheme = "BasicAuth";
-                options.DefaultChallengeScheme = "BasicAuth";
+
+                options.DefaultAuthenticateScheme = "Bearer";
+                options.DefaultChallengeScheme = "Bearer";
             })
-            .AddScheme<AuthenticationSchemeOptions, BasicAuthHandler>("BasicAuth", null);
+            .AddJwtBearer("Bearer", options =>
+            {
+                options.Authority = Environment.GetEnvironmentVariable("IDENTITY_PROVIDER_AUTORITY");
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateAudience = false
+                };
+            });
+            builder.Services.AddAuthentication(options =>
+                  {
+                      options.DefaultAuthenticateScheme = "BasicAuth";
+                      options.DefaultChallengeScheme = "BasicAuth";
+                  })
+                  .AddScheme<AuthenticationSchemeOptions, BasicAuthHandler>("BasicAuth", null);
 
             builder.Services.AddSignalR(e =>
             {
                 e.MaximumReceiveMessageSize = 102400000;
             });
-
-            // in memory cache
-            // builder.Services.AddMemoryCache();
 
             // In memory db provider
             builder.Services.AddCors(options =>
@@ -63,6 +71,12 @@ namespace ImListening
 
             builder.Services.AddSingleton(typeof(MongoDbContext<>));
             builder.Services.Configure<MongoDbConfigs>(builder.Configuration.GetSection(MongoDbConfigs.Option));
+            builder.Services.AddSingleton(new MongoDbConfigs()
+            {
+                ConnectionString = Environment.GetEnvironmentVariable("MONGO_DB_CONNECTION_STRING") ?? string.Empty,
+                DatabaseName = Environment.GetEnvironmentVariable("DATABASE_NAME") ?? string.Empty,
+                EnableCommandTracing = Convert.ToBoolean(Environment.GetEnvironmentVariable("MONGO_DB_ENABLE_COMMAND_TRACING"))
+            });
             builder.Services.AddTransient(typeof(IMongoDbRepository<>), typeof(MongoDbRepository<>));
 
             // Business Services
@@ -102,8 +116,8 @@ namespace ImListening
             app.UseStaticFiles();
             app.UseRouting();
 
-            app.UseAuthorization();
             app.UseAuthentication();
+            app.UseAuthorization();
 
             app.MapControllerRoute(
                 name: "default",
@@ -177,21 +191,19 @@ namespace ImListening
                     await Task.Delay(1000);
                     try
                     {
-                        var users = ListenController.LoadTestingUrls.Values.Distinct().ToList();
+                        var users = ListenController.LoadTestingWebhooks.Select(a => a.Value.Webhook.UserId).Distinct().ToList();
                         foreach (var user in users)
                         {
-                            var paths = ListenController.LoadTestingUrls.Where(a => a.Value == user).Select(a => a.Key).ToList();
-                            List<object> ls = new ();
-                            ListenController.LoadTestingHitCount.Where(a => paths.Contains(a.Key)).ToList().ForEach(a =>
+                            if (!string.IsNullOrWhiteSpace(user))
                             {
-                                ls.Add(new { Path = a.Key, HitCount = a.Value, Time = DateTime.UtcNow });
-                            });
-
-                            if (ls.Any())
-                            {
-                                await listenerService.SendLoadTestResultAsync(user, ls);
+                                var paths = ListenController.LoadTestingWebhooks.Where(a => a.Value.Webhook.UserId == user)
+                                .Select(a => new { Path = a.Key, a.Value.HitCount, Time = DateTime.UtcNow }).ToList<object>();
+                                if (paths.Any())
+                                {
+                                    await listenerService.SendLoadTestResultAsync(user, paths);
+                                }
                             }
-                        } 
+                        }
                     }
                     catch (Exception ex)
                     {

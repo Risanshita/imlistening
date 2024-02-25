@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Navigate, Outlet } from "react-router-dom";
+import event from "./event";
 
 export const PrivateRoute = () => {
   return isLogin() ? (
@@ -40,4 +41,5 @@ export function getUserId() {
 
 export function logout() {
   localStorage.removeItem("user");
+  event.emit("onLoggedOut");
 }

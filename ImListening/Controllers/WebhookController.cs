@@ -1,8 +1,13 @@
-﻿using Core.ImListening.ApiModels;
+﻿using Amazon.Runtime.Internal.Util;
+using Azure.Core;
+using Core.ImListening.ApiModels;
 using Core.ImListening.DbModels;
 using Core.ImListening.Services.Interfaces;
+using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using MongoDB.Bson.Serialization.Conventions;
+using System.IO;
 using System.Net;
 
 namespace ImListening.Controllers
@@ -41,6 +46,7 @@ namespace ImListening.Controllers
         {
             if (request.Paths != null && request.Paths.Any())
             {
+                Dictionary<string, Webhook> webhooks = new();
                 foreach (var path in request.Paths)
                 {
                     var webhook = await _webhookService.GetWebhookByIdAsync(path);
@@ -52,18 +58,18 @@ namespace ImListening.Controllers
                     {
                         return Unauthorized();
                     }
+                    webhooks.Add(webhook.Id, webhook);
                 }
-                ListenController.LoadTestingUrls.Where(a => a.Value == UserId)
+                ListenController.LoadTestingWebhooks.Where(a => a.Value.Webhook.UserId == UserId)
                     .ToList()
-                    .ForEach(a => { 
-                        ListenController.LoadTestingUrls.TryRemove(a.Key, out _);
-                        ListenController.LoadTestingHitCount.TryRemove(a.Key, out _);
+                    .ForEach(a =>
+                    {
+                        ListenController.LoadTestingWebhooks.TryRemove(a.Key, out _);
                     });
 
                 foreach (var path in request.Paths)
                 {
-                    ListenController.LoadTestingUrls.TryAdd(path, UserId);
-                    ListenController.LoadTestingHitCount.TryAdd(path, 0);
+                    ListenController.LoadTestingWebhooks.TryAdd(path, new LoadTestGroup { Webhook = webhooks[path], HitCount = 0 });
                 }
                 return new ObjectResult("Load testing group created!") { StatusCode = (int)HttpStatusCode.Created };
             }
@@ -76,16 +82,16 @@ namespace ImListening.Controllers
         [HttpDelete("load-test")]
         public ActionResult DeleteLoadTestingGroup()
         {
-            ListenController.LoadTestingUrls.Where(a => a.Value == UserId)
+            ListenController.LoadTestingWebhooks.Where(a => a.Value.Webhook.UserId == UserId)
                 .ToList()
-                .ForEach(a => ListenController.LoadTestingUrls.TryRemove(a.Key, out _));
+                .ForEach(a => ListenController.LoadTestingWebhooks.TryRemove(a.Key, out _));
             return Ok();
         }
 
         [HttpGet("load-test")]
         public ActionResult GetLoadTestingGroup()
         {
-            var paths = ListenController.LoadTestingUrls.Where(a => a.Value == UserId).Select(a => a.Key).ToList();
+            var paths = ListenController.LoadTestingWebhooks.Where(a => a.Value.Webhook.UserId == UserId).Select(a => a.Key).ToList();
             if (paths.Any())
             {
                 return Ok(paths);
@@ -114,8 +120,25 @@ namespace ImListening.Controllers
             {
                 return NotFound();
             }
+            UpdateLoadTestGroupUrl(id, request);
             await _webhookService.UpdateWebhookAsync(webhook, request);
             return NoContent();
+        }
+
+        private void UpdateLoadTestGroupUrl(string id, WebhookRequest request)
+        {
+            try
+            {
+                if (ListenController.LoadTestingWebhooks.TryGetValue(id, out LoadTestGroup? value))
+                {
+                    var webhook = value.Webhook;
+                    webhook.ContentType = request.ContentType;
+                    webhook.Response = request.Response;
+                    webhook.StatusCode = request.StatusCode;
+                    webhook.ExpireOnUtc = DateTime.UtcNow.AddMinutes(request.ExpireAfterMin);
+                }
+            }
+            catch { }
         }
 
         [HttpDelete("{id}")]

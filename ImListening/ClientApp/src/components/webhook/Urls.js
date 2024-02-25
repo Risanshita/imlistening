@@ -231,7 +231,7 @@ const Urls = () => {
               className="btn"
               onClick={() => createLoadGroup()}
             >
-              Create load group
+              Create load test group
             </Button>
           ) : null}
 
