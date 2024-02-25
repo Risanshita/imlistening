@@ -3,7 +3,7 @@ using System.Diagnostics;
 
 namespace ImListening.Controllers
 {
-    [Route("api")]
+    [Route("api/diagnostics")]
     [ApiController]
     public class DiagnosticsController : ControllerBase
     {
@@ -25,7 +25,7 @@ namespace ImListening.Controllers
             return Ok();
         }
 
-        [HttpGet("diagnostics")]
+        [HttpGet("")]
         public ActionResult GetDiagnostics()
         {
             var now = DateTime.UtcNow;

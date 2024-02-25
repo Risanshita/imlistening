@@ -68,7 +68,7 @@ const History = () => {
           .map((path) => `webhookPath=${path}`)
           .join("&");
         const response = await fetch(
-          `history?skip=${isLoadMore ? history.length : 0}&${pathQueryString}`,
+          `api/history?skip=${isLoadMore ? history.length : 0}&${pathQueryString}`,
           {
             headers: authHeader(),
           }
@@ -209,7 +209,7 @@ const History = () => {
   };
 
   const getHistory = (dataCount) => {
-    const url = `/history?skip=0&take=${dataCount}`;
+    const url = `api/history?skip=0&take=${dataCount}`;
     fetch(url, {
       method: "GET",
       headers: authHeader(),

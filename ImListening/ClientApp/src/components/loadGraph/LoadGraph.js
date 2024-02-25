@@ -159,7 +159,7 @@ const LoadGraph = () => {
     return new Date(time).getTime();
   };
   const getAllPaths = async () => {
-    const response = await fetch("history/load-test", {
+    const response = await fetch("api/history/load-test", {
       headers: authHeader(),
     });
     const responseData = await response.json();
