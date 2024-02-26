@@ -29,22 +29,24 @@ namespace ImListening
               {
                   builder.AddConsole();
               });
-
-            builder.Services
-            .AddAuthentication(options =>
+            if (!string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable("IDENTITY_PROVIDER_AUTORITY")))
             {
-
-                options.DefaultAuthenticateScheme = "Bearer";
-                options.DefaultChallengeScheme = "Bearer";
-            })
-            .AddJwtBearer("Bearer", options =>
-            {
-                options.Authority = Environment.GetEnvironmentVariable("IDENTITY_PROVIDER_AUTORITY");
-                options.TokenValidationParameters = new TokenValidationParameters
+                builder.Services
+                .AddAuthentication(options =>
                 {
-                    ValidateAudience = false
-                };
-            });
+
+                    options.DefaultAuthenticateScheme = "Bearer";
+                    options.DefaultChallengeScheme = "Bearer";
+                })
+                .AddJwtBearer("Bearer", options =>
+                {
+                    options.Authority = Environment.GetEnvironmentVariable("IDENTITY_PROVIDER_AUTORITY");
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateAudience = false
+                    };
+                });
+            }
             builder.Services.AddAuthentication(options =>
                   {
                       options.DefaultAuthenticateScheme = "BasicAuth";

@@ -14,6 +14,12 @@ services:
       ASPNETCORE_HOSTINGSTARTUPASSEMBLIES: Microsoft.AspNetCore.SpaProxy
       ASPNETCORE_URLS: https://+
       ASPNETCORE_HTTPS_PORT: 443
+      MONGO_DB_CONNECTION_STRING: mongodb://localhost:27017
+      DATABASE_NAME: WebHooks
+      MONGO_DB_ENABLE_COMMAND_TRACING: false
+      IDENTITY_PROVIDER_AUTORITY: https://login-stage.solutionsbytext.com
+      IDENTITY_PROVIDER_AUDIENCE: analytics-manager
+
     ports:
       - '8081:44428'
       - '8082:443'
