@@ -16,7 +16,7 @@ const Home = () => {
             </Button>
           </div>
         </div>
-
+     
         <div className="imageBox">
           <Image
             preview={false}

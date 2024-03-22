@@ -1,26 +1,8 @@
 import React, { Component } from "react";
-import {
-  Collapse,
-  Navbar,
-  NavbarBrand,
-  NavbarToggler,
-  NavItem,
-  NavLink,
-} from "reactstrap";
-import {
-  AiFillHome,
-  AiOutlineHistory,
-  AiOutlineTeam,
-  AiOutlinePaperClip,
-  AiOutlineLogin,
-  AreaChartOutlined ,
-
-} from "react-icons/ai";
-import {
-  AiOutlineLogout,
-  BarChartOutlined,
-} from "@ant-design/icons";
-import { Link } from "react-router-dom";
+import { Collapse, Navbar, NavbarBrand, NavbarToggler, NavItem, NavLink } from "reactstrap";
+import { AiFillHome, AiOutlineHistory, AiOutlineTeam, AiOutlinePaperClip, AiOutlineLogin, AreaChartOutlined } from "react-icons/ai";
+import { AiOutlineLogout, BarChartOutlined } from "@ant-design/icons";
+import { Link, NavLink as RRNavLink } from "react-router-dom";
 import logo from "./../assets/logo.png";
 import "./NavMenu.css";
 import { logout } from "../Util";
@@ -43,6 +25,7 @@ export class NavMenu extends Component {
       collapsed: !this.state.collapsed,
     });
   }
+
   render() {
     return (
       <header>
@@ -62,30 +45,36 @@ export class NavMenu extends Component {
             navbar
           >
             <ul className="navbar-nav flex-grow">
-              <NavLink tag={Link} className="menu" to="/">
-                <AiFillHome className="menuIcon" /> Home
-              </NavLink>
-              <NavLink tag={Link} className="menu" to="/history">
-                <AiOutlineHistory className="menuIcon" />
-                History/Live
-              </NavLink>
-              <NavLink tag={Link} className="menu" to="/loadGraph">
-                {/* <AreaChartOutlined  className="menuIcon"  /> */}
-                <BarChartOutlined  className="menuIcon"/>
-                Live Graph
-              </NavLink>
-              <NavLink tag={Link} className="menu" to="/Users">
-                <AiOutlineTeam className="menuIcon" />
-                Users
-              </NavLink>
-              <NavLink tag={Link} className="menu" to="/urls">
-                <AiOutlinePaperClip className="menuIcon" />
-                Urls
-              </NavLink>
-              <NavLink tag={Link} onClick={logout} className="menu" to="/login">
-                <AiOutlineLogin className="menuIcon" />
-                {isLogin() ? "Logout" : "Login"}
-              </NavLink>
+              <NavItem>
+                <NavLink tag={RRNavLink} exact activeClassName="active" className="menu" to="/">
+                  <AiFillHome className="menuIcon" /> Home
+                </NavLink>
+              </NavItem>
+              <NavItem>
+                <NavLink tag={RRNavLink} activeClassName="active" className="menu" to="/history">
+                  <AiOutlineHistory className="menuIcon" /> History/Live
+                </NavLink>
+              </NavItem>
+              <NavItem>
+                <NavLink tag={RRNavLink} activeClassName="active" className="menu" to="/loadGraph">
+                  <BarChartOutlined className="menuIcon" /> Live Graph
+                </NavLink>
+              </NavItem>
+              <NavItem>
+                <NavLink tag={RRNavLink} activeClassName="active" className="menu" to="/Users">
+                  <AiOutlineTeam className="menuIcon" /> Users
+                </NavLink>
+              </NavItem>
+              <NavItem>
+                <NavLink tag={RRNavLink} activeClassName="active" className="menu" to="/urls">
+                  <AiOutlinePaperClip className="menuIcon" /> Urls
+                </NavLink>
+              </NavItem>
+              <NavItem>
+                <NavLink tag={RRNavLink} onClick={logout} className="menu" to="/login">
+                  <AiOutlineLogin className="menuIcon" /> {isLogin() ? "Logout" : "Login"}
+                </NavLink>
+              </NavItem>
             </ul>
           </Collapse>
         </Navbar>
