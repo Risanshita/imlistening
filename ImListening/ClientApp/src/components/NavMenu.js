@@ -1,23 +1,44 @@
 import React, { Component } from "react";
-import { Collapse, Navbar, NavbarBrand, NavbarToggler, NavItem, NavLink } from "reactstrap";
-import { AiFillHome, AiOutlineHistory, AiOutlineTeam, AiOutlinePaperClip, AiOutlineLogin, AreaChartOutlined } from "react-icons/ai";
-import { AiOutlineLogout, BarChartOutlined } from "@ant-design/icons";
-import { Link, NavLink as RRNavLink } from "react-router-dom";
+import {
+  Collapse,
+  Navbar,
+  NavbarBrand,
+  NavbarToggler,
+  NavItem,
+  NavLink,
+} from "reactstrap";
+import {
+  AiFillHome,
+  AiOutlineHistory,
+  AiOutlineTeam,
+  AiOutlinePaperClip,
+  AiOutlineLogin,
+} from "react-icons/ai";
+import { BarChartOutlined } from "@ant-design/icons";
+import { Link } from "react-router-dom";
 import logo from "./../assets/logo.png";
 import "./NavMenu.css";
 import { logout } from "../Util";
 import { isLogin } from "../Util";
+import event from "../event";
 
 export class NavMenu extends Component {
   static displayName = NavMenu.name;
-
   constructor(props) {
     super(props);
 
     this.toggleNavbar = this.toggleNavbar.bind(this);
     this.state = {
       collapsed: true,
+      isLoggedIn: isLogin(),
     };
+
+    event.on("onLoggedIn", () => {
+      this.setState({ ...this.state, isLoggedIn: true });
+    });
+    event.on("onLoggedOut", () => {
+      this.setState({ ...this.state, isLoggedIn: false });
+    });
   }
 
   toggleNavbar() {
@@ -45,36 +66,30 @@ export class NavMenu extends Component {
             navbar
           >
             <ul className="navbar-nav flex-grow">
-              <NavItem>
-                <NavLink tag={RRNavLink} exact activeClassName="active" className="menu" to="/">
-                  <AiFillHome className="menuIcon" /> Home
-                </NavLink>
-              </NavItem>
-              <NavItem>
-                <NavLink tag={RRNavLink} activeClassName="active" className="menu" to="/history">
-                  <AiOutlineHistory className="menuIcon" /> History/Live
-                </NavLink>
-              </NavItem>
-              <NavItem>
-                <NavLink tag={RRNavLink} activeClassName="active" className="menu" to="/loadGraph">
-                  <BarChartOutlined className="menuIcon" /> Live Graph
-                </NavLink>
-              </NavItem>
-              <NavItem>
-                <NavLink tag={RRNavLink} activeClassName="active" className="menu" to="/Users">
-                  <AiOutlineTeam className="menuIcon" /> Users
-                </NavLink>
-              </NavItem>
-              <NavItem>
-                <NavLink tag={RRNavLink} activeClassName="active" className="menu" to="/urls">
-                  <AiOutlinePaperClip className="menuIcon" /> Urls
-                </NavLink>
-              </NavItem>
-              <NavItem>
-                <NavLink tag={RRNavLink} onClick={logout} className="menu" to="/login">
-                  <AiOutlineLogin className="menuIcon" /> {isLogin() ? "Logout" : "Login"}
-                </NavLink>
-              </NavItem>
+              <NavLink tag={Link} className="menu" to="/">
+                <AiFillHome className="menuIcon" /> Home
+              </NavLink>
+              <NavLink tag={Link} className="menu" to="/history">
+                <AiOutlineHistory className="menuIcon" />
+                History/Live
+              </NavLink>
+              <NavLink tag={Link} className="menu" to="/loadGraph">
+                {/* <AreaChartOutlined  className="menuIcon"  /> */}
+                <BarChartOutlined className="menuIcon" />
+                Live Graph
+              </NavLink>
+              <NavLink tag={Link} className="menu" to="/Users">
+                <AiOutlineTeam className="menuIcon" />
+                Users
+              </NavLink>
+              <NavLink tag={Link} className="menu" to="/urls">
+                <AiOutlinePaperClip className="menuIcon" />
+                Urls
+              </NavLink>
+              <NavLink tag={Link} onClick={logout} className="menu" to="/login">
+                <AiOutlineLogin className="menuIcon" />
+                {this.state.isLoggedIn ? "Logout" : "Login"}
+              </NavLink>
             </ul>
           </Collapse>
         </Navbar>

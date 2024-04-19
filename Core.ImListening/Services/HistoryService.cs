@@ -1,9 +1,6 @@
-﻿using Common.ImListening.Repositories.InMemoryDb;
-using Common.ImListening.Repositories.MongoDb;
+﻿using Common.ImListening.Repositories.MongoDb;
 using Core.ImListening.DbModels;
 using Core.ImListening.Services.Interfaces;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.SignalR;
 using MongoDB.Driver;
 
 namespace Core.ImListening.Services
@@ -53,6 +50,6 @@ namespace Core.ImListening.Services
         }
 
 
-        
+
     }
 }

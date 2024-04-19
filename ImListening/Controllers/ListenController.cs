@@ -1,4 +1,5 @@
-﻿using Core.ImListening.DbModels;
+using Core.ImListening.ApiModels;
+using Core.ImListening.DbModels;
 using Core.ImListening.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -12,8 +13,7 @@ namespace ImListening.Controllers
     {
         private readonly IWebhookService _webhookService;
         private readonly IListenerService _listenerService;
-        public static readonly ConcurrentDictionary<string, int> LoadTestingHitCount = new();
-        public static readonly ConcurrentDictionary<string, string> LoadTestingUrls = new(); // path, UserId
+        public static readonly ConcurrentDictionary<string, LoadTestGroup> LoadTestingWebhooks = new(); // path as Key
 
         public ListenController(IWebhookService webhookService, IListenerService listenerService)
         {
@@ -46,10 +46,10 @@ namespace ImListening.Controllers
 
         private async Task<IActionResult> GetResponse(string path)
         {
-            if (LoadTestingUrls.ContainsKey(path))
+            if (LoadTestingWebhooks.TryGetValue(path, out LoadTestGroup? value))
             {
-                LoadTestingHitCount[path] = LoadTestingHitCount[path] + 1;
-                return Ok();
+                value.HitCount++;
+                return await GenerateResponse(value.Webhook);
             }
             var webhook = await _webhookService.GetWebhookByIdAsync(path);
             if (webhook == null)
@@ -58,9 +58,8 @@ namespace ImListening.Controllers
             }
             await _listenerService.ProcessRequest(webhook, ControllerContext);
             return await GenerateResponse(webhook);
-
         }
-        
+
         private async Task<IActionResult> GenerateResponse(Webhook webhook)
         {
             var response = new ContentResult
@@ -84,7 +83,7 @@ namespace ImListening.Controllers
         }
 
         [Route("oauth/{path}")]
-        [Authorize]
+        [Authorize(AuthenticationSchemes = "Bearer")]
 
         [HttpGet]
         [HttpPost]

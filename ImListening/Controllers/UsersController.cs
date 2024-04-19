@@ -1,4 +1,4 @@
-﻿using Core.ImListening.ApiModels;
+using Core.ImListening.ApiModels;
 using Core.ImListening.DbModels;
 using Core.ImListening.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;

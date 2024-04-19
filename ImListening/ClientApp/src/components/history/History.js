@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef } from "react";
-import { HttpTransportType, HubConnectionBuilder } from "@microsoft/signalr";
+import React, { useState, useEffect } from "react";
+import { HubConnectionBuilder } from "@microsoft/signalr";
 import { authHeader, getUserId } from "../../Util";
 import {
   Card,
@@ -20,8 +20,6 @@ import {
   CopyOutlined,
 } from "@ant-design/icons";
 import "./Style.css";
-import { get } from "jquery";
-
 const History = () => {
   const [history, setHistory] = useState([]);
   const [selectedWebhook, setSelectedWebhook] = useState(null);
@@ -56,7 +54,7 @@ const History = () => {
         console.log("Connected!: " + userId);
         if (userId) {
           connection.on(userId, (message) => {
-            proccessMessage(message);
+            processMessage(message);
           });
         }
       })
@@ -70,7 +68,7 @@ const History = () => {
           .map((path) => `webhookPath=${path}`)
           .join("&");
         const response = await fetch(
-          `history?skip=${isLoadMore ? history.length : 0}&${pathQueryString}`,
+          `api/history?skip=${isLoadMore ? history.length : 0}&${pathQueryString}`,
           {
             headers: authHeader(),
           }
@@ -105,7 +103,7 @@ const History = () => {
     }
   };
 
-  const proccessMessage = (message) => {
+  const processMessage = (message) => {
     try {
       message.requestInfos = message.requestInfos?.reduce((result, item) => {
         const key = item.resource;
@@ -211,7 +209,7 @@ const History = () => {
   };
 
   const getHistory = (dataCount) => {
-    const url = `/history?skip=0&take=${dataCount}`;
+    const url = `api/history?skip=0&take=${dataCount}`;
     fetch(url, {
       method: "GET",
       headers: authHeader(),
@@ -312,8 +310,6 @@ const History = () => {
                 {/* <button onClick={copyResponse} className="copyResponse">
                   Copy Response
                 </button> */}
-
-
 
                 <CopyOutlined
                   width={60}
