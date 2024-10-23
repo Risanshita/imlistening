@@ -11,8 +11,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Core.ImListening", "Core.Im
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{BC245860-78B1-4CAB-8B13-ABD3C9DCAB9F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImListeningTest", "ImListeningTest\ImListeningTest.csproj", "{F99E1B93-3781-4134-BABD-5E3E4662295B}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -35,10 +33,6 @@ Global
 		{BC245860-78B1-4CAB-8B13-ABD3C9DCAB9F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BC245860-78B1-4CAB-8B13-ABD3C9DCAB9F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BC245860-78B1-4CAB-8B13-ABD3C9DCAB9F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F99E1B93-3781-4134-BABD-5E3E4662295B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F99E1B93-3781-4134-BABD-5E3E4662295B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F99E1B93-3781-4134-BABD-5E3E4662295B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F99E1B93-3781-4134-BABD-5E3E4662295B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
